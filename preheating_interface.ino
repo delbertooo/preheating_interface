@@ -30,6 +30,10 @@ void read_shit() {
   unsigned long now, start = millis();
   ResponseProcessor green;
   ResponseProcessor red;
+  //RequestExecutor re(12000, green, red);
+  //re.AddRequestSequence(...)
+  //re.ProcessQueue();
+  
   
   digitalWrite(11, LOW);
   do {
