@@ -4,107 +4,109 @@
 #include <vector>
 
 
-class Request {
+class Runnable {
   public:
-    virtual void Execute() = 0;
+    virtual void Run() = 0;
 };
 
 
-struct QueuedRequest {
+struct QueuedRunnable {
   unsigned long offset;
-  Request* request;
-  QueuedRequest(unsigned long offset, Request& request) : offset(offset), request(&request) {}
+  Runnable* request;
+  QueuedRunnable(unsigned long offset, Runnable& request) : offset(offset), request(&request) {}
 };
 
-class RequestExecutor {
+class RunnableScheduler {
   public:
     unsigned long LastOffset() {
       return queue.empty() ? 0 : queue.back().offset;
     }
-    void AddRequest(unsigned long offset, Request &request) {
+    void Add(unsigned long offset, Runnable &request) {
       queue.insert(FindPositionByOffset(offset), {offset, request});
     }
 
     void ProcessQueue() {
-      std::deque<QueuedRequest>::iterator next_queued_request = queue.begin();
+      std::deque<QueuedRunnable>::iterator next_queued_request = queue.begin();
       unsigned long start_millis = millis();
       while (next_queued_request != queue.end()) {
         unsigned long now = millis();
         unsigned long current_offset = now - start_millis;
         if (current_offset >= next_queued_request->offset) {
-          next_queued_request->request->Execute();
+          next_queued_request->request->Run();
           next_queued_request++;
         }
       }
     }
   protected:
-    std::deque<QueuedRequest> queue;
+    std::deque<QueuedRunnable> queue;
   private:
-    std::deque<QueuedRequest>::iterator FindPositionByOffset(unsigned long offset) {
+    std::deque<QueuedRunnable>::iterator FindPositionByOffset(unsigned long offset) {
       // TODO: NYI
       return queue.begin();
     }
 };
 
 
-class NoOperation : public Request {
+class NoOperation : public Runnable {
+  private:
+    NoOperation() {}
   public:
     static NoOperation& Instance() {
       static NoOperation instance;
       return instance;
     }
-    void Execute() { }
+    void Run() { }
 };
 
-class RequestSequenceBuilder {
+class RunnableSequence {
   private:
     unsigned long actualDelay = 0;
-    std::vector<QueuedRequest> queue;
+    std::vector<QueuedRunnable> queue;
   public:
-    RequestSequenceBuilder &Run(Request &request) {
+    RunnableSequence &Run(Runnable &request) {
       queue.push_back({actualDelay, request});
       return *this;
     }
 
-    RequestSequenceBuilder &Wait(unsigned long delayInMilliseconds) {
+    RunnableSequence &Wait(unsigned long delayInMilliseconds) {
       actualDelay += delayInMilliseconds;
       return *this;
     }
 
-    RequestSequenceBuilder &AddToExecutor(RequestExecutor &executor) {
-      for (QueuedRequest &element : queue) {
-        executor.AddRequest(element.offset, *element.request);
+    RunnableSequence &AddToScheduler(RunnableScheduler &scheduler) {
+      for (QueuedRunnable &element : queue) {
+        scheduler.Add(element.offset, *element.request);
       }
       // add noop to the end if required
       unsigned long lastOffset = queue.empty() ? 0 : queue.back().offset;
       if (actualDelay > lastOffset) {
-        executor.AddRequest(actualDelay, NoOperation::Instance());
+        scheduler.Add(actualDelay, NoOperation::Instance());
       }
       return *this;
     }
 
 };
 
-class PressOnButton : public Request {
+class PressOnButton : public Runnable {
   public:
-    void Execute() {
+    void Run() {
       digitalWrite(11, LOW);
     }
 };
 
-class ReleaseOnButton : public Request {
+class ReleaseOnButton : public Runnable {
   public:
-    void Execute() {
+    void Run() {
       digitalWrite(11, HIGH);
     }
 };
 
-class PressOffButton : public Request {
+class PressOffButton : public Runnable {
   public:
-    void Execute() {}
+    void Run() {}
 };
 
-class ReadStatusLed : public Request {
+class ReadStatusLed : public Runnable {
   private:
     const int PIN_RED = 0;
     const int PIN_GREEN = 1;
@@ -112,7 +114,7 @@ class ReadStatusLed : public Request {
     ResponseProcessor &red;
   public:
     ReadStatusLed(ResponseProcessor &green, ResponseProcessor &red) : green(green), red(red) {}
-    void Execute() {
+    void Run() {
       red.addMeasurement(analogRead(PIN_RED));
       green.addMeasurement(analogRead(PIN_GREEN));
     }
@@ -152,22 +154,22 @@ class PreheatingCommand {
   protected:
     const unsigned int LED_READ_INTERVAL = 50; // [ms]
     
-    PreheatingAnswer Execute(RequestSequenceBuilder &builder) {
-      RequestExecutor re;
-      builder.AddToExecutor(re);
-      return Execute(re);
+    PreheatingAnswer Execute(RunnableSequence &sequence) {
+      RunnableScheduler scheduler;
+      sequence.AddToScheduler(scheduler);
+      return Execute(scheduler);
     }
     
-    PreheatingAnswer Execute(RequestExecutor &re) {
+    PreheatingAnswer Execute(RunnableScheduler &scheduler) {
       // add read tasks
       ResponseProcessor green, red;
       ReadStatusLed readTask(green, red);
-      unsigned long lastOffset = re.LastOffset();
+      unsigned long lastOffset = scheduler.LastOffset();
       for (unsigned int offset = 0; offset < lastOffset; offset += LED_READ_INTERVAL) {
-        re.AddRequest((unsigned long) offset, readTask);
+        scheduler.Add((unsigned long) offset, readTask);
       }
       // process queue
-      re.ProcessQueue();
+      scheduler.ProcessQueue();
       // build result
       return PreheatingAnswer(green.getPressedTimes(), red.getPressedTimes());
       //return *this;
@@ -181,11 +183,11 @@ class SwitchOn : public PreheatingCommand {
       const int toMinutes = 10;
       PressOnButton pressOnButton;
 
-      PreheatingAnswer a_step3 = Execute(RequestSequenceBuilder().Run(pressOnButton).Wait(3000));
+      PreheatingAnswer a_step3 = Execute(RunnableSequence().Run(pressOnButton).Wait(3000));
 
-      RequestExecutor dry_step3;
-      dry_step3.AddRequest(0, pressOnButton);
-      dry_step3.AddRequest(3000, NoOperation::Instance());
+      RunnableScheduler dry_step3;
+      dry_step3.Add(0, pressOnButton);
+      dry_step3.Add(3000, NoOperation::Instance());
       
       PreheatingAnswer a_dry_step3 = Execute(dry_step3);
 
@@ -194,7 +196,7 @@ class SwitchOn : public PreheatingCommand {
         return;
       }
 
-      RequestSequenceBuilder sendPowerOn(RequestSequenceBuilder().Run(pressOnButton).Wait(3000));
+      RunnableSequence sendPowerOn(RunnableSequence().Run(pressOnButton).Wait(3000));
       if (Execute(sendPowerOn).CountRedFlashesWithLength(500) != 1) {
         // "expected one flash of the red led";
         return;
