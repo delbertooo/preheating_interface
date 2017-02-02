@@ -1,32 +1,8 @@
-#include <Arduino.h>
-#include <StandardCplusplus.h>
-#include <deque>
-#include <vector>
 #include "Runnable/Runnable.hpp"
 
-class PressOnButton : public Runnable {
-  public:
-    void Run() override;
-};
-
-void PressOnButton::Run() {
-  digitalWrite(11, LOW);
-}
-
-class ReleaseOnButton : public Runnable {
-  public:
-    void Run() override;
-};
-void ReleaseOnButton::Run() {
-  digitalWrite(11, HIGH);
-}
-    
-class PressOffButton : public Runnable {
-  public:
-    void Run() override;
-};
-
-void PressOffButton::Run() {}
+class PressOnButton : public Runnable { public: void Run() override; };
+class ReleaseOnButton : public Runnable { public: void Run() override; };
+class PressOffButton : public Runnable { public: void Run() override; };
 
 class ReadStatusLed : public Runnable {
   private:
@@ -39,12 +15,6 @@ class ReadStatusLed : public Runnable {
     void Run() override;
 };
 
-ReadStatusLed::ReadStatusLed(ResponseProcessor &green, ResponseProcessor &red) : green(green), red(red) {}
-void ReadStatusLed::Run() {
-  red.addMeasurement(analogRead(PIN_RED));
-  green.addMeasurement(analogRead(PIN_GREEN));
-}
-
 class PreheatingCommand {
   protected:
     const unsigned int LED_READ_INTERVAL = 50; // [ms]
@@ -52,6 +22,22 @@ class PreheatingCommand {
     PreheatingAnswer Execute(RunnableScheduler &scheduler);
 };
 
+void PressOnButton::Run() {
+  digitalWrite(11, LOW);
+}
+
+void ReleaseOnButton::Run() {
+  digitalWrite(11, HIGH);
+}
+
+void PressOffButton::Run() {}
+
+ReadStatusLed::ReadStatusLed(ResponseProcessor &green, ResponseProcessor &red) : green(green), red(red) {}
+
+void ReadStatusLed::Run() {
+  red.addMeasurement(analogRead(PIN_RED));
+  green.addMeasurement(analogRead(PIN_GREEN));
+}
 
 PreheatingAnswer PreheatingCommand::Execute(RunnableSequence &sequence) {
   RunnableScheduler scheduler;
@@ -73,3 +59,4 @@ PreheatingAnswer PreheatingCommand::Execute(RunnableScheduler &scheduler) {
   return PreheatingAnswer(green.getPressedTimes(), red.getPressedTimes());
   //return *this;
 }
+
