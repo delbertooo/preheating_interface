@@ -1,6 +1,10 @@
 #include "Runnable/Runnable.hpp"
 #include "actions.hpp"
 #include "ResponseProcessor.hpp"
+#include "PreheatingAnswer.hpp"
+
+#ifndef __PREHEATINGCOMMAND_HPP
+#define __PREHEATINGCOMMAND_HPP 1
 
 class PreheatingCommand {
   protected:
@@ -33,3 +37,4 @@ PreheatingAnswer PreheatingCommand::Execute(RunnableScheduler &scheduler) {
   return PreheatingAnswer(green.getPressedTimes(), red.getPressedTimes());
 }
 
+#endif

@@ -1,6 +1,7 @@
 #include <StandardCplusplus.h>
 #include <vector>
 #include "ResponseProcessor.hpp"
+#include "SwitchOnCommand.hpp"
 
 const byte RED_PIN = 2;
 const byte GREEN_PIN = 3;

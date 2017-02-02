@@ -2,6 +2,9 @@
 #include <vector>
 #include "Runnable/Runnable.hpp"
 
+#ifndef __PREHEATINGANSWER_HPP
+#define __PREHEATINGANSWER_HPP 1
+
 class PreheatingAnswer {
   private:
     std::vector<long> greenFlashes;
@@ -36,3 +39,4 @@ unsigned int PreheatingAnswer::CountGreenFlashesWithLength(unsigned long lengthI
   return CountProcessorFlashesWithLength(greenFlashes, lengthInMilliseconds);
 }
 
+#endif

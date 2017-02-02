@@ -3,6 +3,7 @@
 #include <deque>
 #include <vector>
 #include "Runnable/Runnable.hpp"
+#include "PreheatingCommand.hpp"
 
 class NoOperation : public Runnable {
   private:
