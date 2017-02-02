@@ -1,5 +1,5 @@
 #include "Runnable/Runnable.hpp"
-#include "ResponseProcessor.hpp"
+#include "LedResponseParser.hpp"
 
 #ifndef __ACTIONS_HPP
 #define __ACTIONS_HPP 1
@@ -13,10 +13,10 @@ class ReadStatusLed : public Runnable {
   private:
     const int PIN_RED = 0;
     const int PIN_GREEN = 1;
-    ResponseProcessor &green;
-    ResponseProcessor &red;
+    LedResponseParser &green;
+    LedResponseParser &red;
   public:
-    ReadStatusLed(ResponseProcessor &green, ResponseProcessor &red);
+    ReadStatusLed(LedResponseParser &green, LedResponseParser &red);
     void Run() override;
 };
 
@@ -38,7 +38,7 @@ void ReleaseOffButton::Run() {
   digitalWrite(10, HIGH);
 }
 
-ReadStatusLed::ReadStatusLed(ResponseProcessor &green, ResponseProcessor &red) : green(green), red(red) {}
+ReadStatusLed::ReadStatusLed(LedResponseParser &green, LedResponseParser &red) : green(green), red(red) {}
 
 void ReadStatusLed::Run() {
   red.AddMeasurement(analogRead(PIN_RED));

@@ -3,10 +3,10 @@
 #include <vector>
 //#include <sstream>
 
-#ifndef __RESPONSEPROCESSOR_HPP
-#define __RESPONSEPROCESSOR_HPP 1
+#ifndef __LEDRESPONSEPARSER_HPP
+#define __LEDRESPONSEPARSER_HPP 1
 
-class ResponseProcessor {
+class LedResponseParser {
   private:
     const int THRESHOLD_MIN = 200; // analogRead value [0 .. 1023]
     const int THRESHOLD_MAX = 500; // analogRead value [0 .. 1023]
@@ -16,21 +16,21 @@ class ResponseProcessor {
     unsigned long startedPressingMillis;
     bool IsPressed(int);
   public:
-    ResponseProcessor();
+    LedResponseParser();
     void AddMeasurement(int);
     void PrintDebugOutput();
     //std::string toString();
     std::vector<unsigned long> PressedTimes();
 };
 
-ResponseProcessor::ResponseProcessor() {
+LedResponseParser::LedResponseParser() {
  
 }
-std::vector<unsigned long> ResponseProcessor::PressedTimes() {
+std::vector<unsigned long> LedResponseParser::PressedTimes() {
   return pressedTimes;
 }
 
-void ResponseProcessor::AddMeasurement(int value) {
+void LedResponseParser::AddMeasurement(int value) {
   //Serial.println(value);
   if (IsPressed(value) && !alreadyPressed) {
     //Serial.println("on");
@@ -46,11 +46,11 @@ void ResponseProcessor::AddMeasurement(int value) {
   }
 }
 
-bool ResponseProcessor::IsPressed(int value) {
+bool LedResponseParser::IsPressed(int value) {
   return value < THRESHOLD_MAX && value > THRESHOLD_MIN;
 }
 
-/*std::string ResponseProcessor::toString() {
+/*std::string LedResponseParser::toString() {
   std::ostringstream stringStream;
   stringStream << "{ size: " << pressedTimes.size() << ", pressedTimes: [";
   //for (auto elapsed : pressedTimes) {
@@ -62,11 +62,11 @@ bool ResponseProcessor::IsPressed(int value) {
   return stringStream.str();
 }
 
-void ResponseProcessor::printDebugOutput() {
+void LedResponseParser::printDebugOutput() {
   Serial.println(toString().c_str());
 }*/
 
-void ResponseProcessor::PrintDebugOutput() {
+void LedResponseParser::PrintDebugOutput() {
   Serial.print("{ size: " + String(pressedTimes.size()) + ", pressedTimes: [");
   //for (auto elapsed : pressedTimes) {
   for (auto it = pressedTimes.begin(); it != pressedTimes.end(); ++it) {

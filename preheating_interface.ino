@@ -1,6 +1,6 @@
 #include <StandardCplusplus.h>
 #include <vector>
-#include "ResponseProcessor.hpp"
+#include "LedResponseParser.hpp"
 #include "SwitchOnCommand.hpp"
 
 const byte RED_PIN = 2;
@@ -29,8 +29,8 @@ void loop() {
 void read_shit() {
   Serial.println("reading shit...");
   unsigned long now, start = millis();
-  ResponseProcessor green;
-  ResponseProcessor red;
+  LedResponseParser green;
+  LedResponseParser red;
   //RequestExecutor re(12000, green, red);
   //re.AddRequestSequence(...)
   //re.ProcessQueue();

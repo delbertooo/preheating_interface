@@ -1,6 +1,6 @@
 #include "Runnable/Runnable.hpp"
 #include "actions.hpp"
-#include "ResponseProcessor.hpp"
+#include "LedResponseParser.hpp"
 #include "PreheatingAnswer.hpp"
 
 #ifndef __PREHEATINGCOMMAND_HPP
@@ -25,7 +25,7 @@ PreheatingAnswer PreheatingCommand::Execute(RunnableSequence &sequence) {
 
 PreheatingAnswer PreheatingCommand::Execute(RunnableScheduler &scheduler) {
   // add read tasks
-  ResponseProcessor green, red;
+  LedResponseParser green, red;
   ReadStatusLed readTask(green, red);
   unsigned long lastOffset = scheduler.LastOffset();
   for (unsigned long offset = 0; offset < lastOffset; offset += LED_READ_INTERVAL) {
