@@ -1,4 +1,3 @@
-#include <Arduino.h>
 #include <StandardCplusplus.h>
 #include "runnable.hpp"
 
