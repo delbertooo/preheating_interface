@@ -2,54 +2,7 @@
 #include <StandardCplusplus.h>
 #include <deque>
 #include <vector>
-
-
-class Runnable {
-  public:
-    virtual void Run() = 0;
-};
-
-
-struct QueuedRunnable {
-  unsigned long offset;
-  Runnable* request;
-  QueuedRunnable(unsigned long offset, Runnable& request) : offset(offset), request(&request) {}
-};
-
-class RunnableScheduler {
-  public:
-    unsigned long LastOffset();
-    void Add(unsigned long offset, Runnable &request);
-    void ProcessQueue();
-  protected:
-    std::deque<QueuedRunnable> queue;
-  private:
-    std::deque<QueuedRunnable>::iterator FindPositionByOffset(unsigned long offset);
-};
-
-std::deque<QueuedRunnable>::iterator RunnableScheduler::FindPositionByOffset(unsigned long offset) {
-  // TODO: NYI
-  return queue.begin();
-}
-unsigned long RunnableScheduler::LastOffset() {
-  return queue.empty() ? 0 : queue.back().offset;
-}
-void RunnableScheduler::Add(unsigned long offset, Runnable &request) {
-  queue.insert(FindPositionByOffset(offset), {offset, request});
-}
-
-void RunnableScheduler::ProcessQueue() {
-  std::deque<QueuedRunnable>::iterator next_queued_request = queue.begin();
-  unsigned long start_millis = millis();
-  while (next_queued_request != queue.end()) {
-    unsigned long now = millis();
-    unsigned long current_offset = now - start_millis;
-    if (current_offset >= next_queued_request->offset) {
-      next_queued_request->request->Run();
-      next_queued_request++;
-    }
-  }
-}
+#include "Runnable/Runnable.hpp"
 
 class NoOperation : public Runnable {
   private:
@@ -61,38 +14,6 @@ class NoOperation : public Runnable {
     }
     void Run() override { }
 };
-
-class RunnableSequence {
-  private:
-    static class : public Runnable { public: void Run() override {} } noop;
-    unsigned long actualDelay = 0;
-    std::vector<QueuedRunnable> queue;
-  public:
-    RunnableSequence &Run(Runnable &request);
-    RunnableSequence &Wait(unsigned long delayInMilliseconds);
-    RunnableSequence &AddToScheduler(RunnableScheduler &scheduler);
-};
-RunnableSequence &RunnableSequence::Run(Runnable &request) {
-  queue.push_back({actualDelay, request});
-  return *this;
-}
-
-RunnableSequence &RunnableSequence::Wait(unsigned long delayInMilliseconds) {
-  actualDelay += delayInMilliseconds;
-  return *this;
-}
-
-RunnableSequence &RunnableSequence::AddToScheduler(RunnableScheduler &scheduler) {
-  for (QueuedRunnable &element : queue) {
-    scheduler.Add(element.offset, *element.request);
-  }
-  // add noop to the end if required
-  unsigned long lastOffset = queue.empty() ? 0 : queue.back().offset;
-  if (actualDelay > lastOffset) {
-    scheduler.Add(actualDelay, noop);
-  }
-  return *this;
-}
 
 class PressOnButton : public Runnable {
   public:
