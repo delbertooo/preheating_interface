@@ -8,45 +8,45 @@
 
 class ResponseProcessor {
   private:
-    const int THRESHOLD_MIN = 200;
-    const int THRESHOLD_MAX = 500;
-    const int MIN_PRESSED_TIME = 10;
+    const int THRESHOLD_MIN = 200; // analogRead value [0 .. 1023]
+    const int THRESHOLD_MAX = 500; // analogRead value [0 .. 1023]
+    const int MIN_PRESSED_TIME = 10; // [ms]
     bool alreadyPressed = false;
     std::vector<unsigned long> pressedTimes;
-    unsigned long l;
-    bool isPressed(int);
+    unsigned long startedPressingMillis;
+    bool IsPressed(int);
   public:
     ResponseProcessor();
-    void addMeasurement(int);
-    void printDebugOutput();
+    void AddMeasurement(int);
+    void PrintDebugOutput();
     //std::string toString();
-    std::vector<unsigned long> getPressedTimes();
+    std::vector<unsigned long> PressedTimes();
 };
 
 ResponseProcessor::ResponseProcessor() {
  
 }
-std::vector<unsigned long> ResponseProcessor::getPressedTimes() {
+std::vector<unsigned long> ResponseProcessor::PressedTimes() {
   return pressedTimes;
 }
 
-void ResponseProcessor::addMeasurement(int value) {
+void ResponseProcessor::AddMeasurement(int value) {
   //Serial.println(value);
-  if (isPressed(value) && !alreadyPressed) {
+  if (IsPressed(value) && !alreadyPressed) {
     //Serial.println("on");
     alreadyPressed = true;
-    l = millis();
-  } else if (!isPressed(value) && alreadyPressed) {
+    startedPressingMillis = millis();
+  } else if (!IsPressed(value) && alreadyPressed) {
     //Serial.println("off");
     alreadyPressed = false;
-    unsigned long elapsed = millis() - l;
+    unsigned long elapsed = millis() - startedPressingMillis;
     if (elapsed >= MIN_PRESSED_TIME) {
       pressedTimes.push_back(elapsed);
     }
   }
 }
 
-bool ResponseProcessor::isPressed(int value) {
+bool ResponseProcessor::IsPressed(int value) {
   return value < THRESHOLD_MAX && value > THRESHOLD_MIN;
 }
 
@@ -66,7 +66,7 @@ void ResponseProcessor::printDebugOutput() {
   Serial.println(toString().c_str());
 }*/
 
-void ResponseProcessor::printDebugOutput() {
+void ResponseProcessor::PrintDebugOutput() {
   Serial.print("{ size: " + String(pressedTimes.size()) + ", pressedTimes: [");
   //for (auto elapsed : pressedTimes) {
   for (auto it = pressedTimes.begin(); it != pressedTimes.end(); ++it) {

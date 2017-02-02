@@ -41,8 +41,8 @@ void ReleaseOffButton::Run() {
 ReadStatusLed::ReadStatusLed(ResponseProcessor &green, ResponseProcessor &red) : green(green), red(red) {}
 
 void ReadStatusLed::Run() {
-  red.addMeasurement(analogRead(PIN_RED));
-  green.addMeasurement(analogRead(PIN_GREEN));
+  red.AddMeasurement(analogRead(PIN_RED));
+  green.AddMeasurement(analogRead(PIN_GREEN));
 }
 
 #endif

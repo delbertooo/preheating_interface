@@ -40,16 +40,16 @@ void read_shit() {
   do {
     now = millis();
     if (now - start > 1000) { digitalWrite(11, HIGH); }
-    red.addMeasurement(analogRead(0));
-    green.addMeasurement(analogRead(1));
+    red.AddMeasurement(analogRead(0));
+    green.AddMeasurement(analogRead(1));
     //Serial.print(analogRead(0));
     //Serial.print("\t");
     //Serial.println(analogRead(1));
   } while (now - start < 4000);
   Serial.println("green: ");
-  green.printDebugOutput();
+  green.PrintDebugOutput();
   Serial.println("red: ");
-  red.printDebugOutput();
+  red.PrintDebugOutput();
 }
 
 void pressed() {
