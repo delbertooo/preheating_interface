@@ -1,6 +1,6 @@
 #include <StandardCplusplus.h>
 #include <vector>
-#include "response_processor.h"
+#include "ResponseProcessor.hpp"
 
 const byte RED_PIN = 2;
 const byte GREEN_PIN = 3;

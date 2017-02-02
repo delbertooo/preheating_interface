@@ -1,43 +1,17 @@
 #include "Runnable/Runnable.hpp"
-
-class PressOnButton : public Runnable { public: void Run() override; };
-class ReleaseOnButton : public Runnable { public: void Run() override; };
-class PressOffButton : public Runnable { public: void Run() override; };
-
-class ReadStatusLed : public Runnable {
-  private:
-    const int PIN_RED = 0;
-    const int PIN_GREEN = 1;
-    ResponseProcessor &green;
-    ResponseProcessor &red;
-  public:
-    ReadStatusLed(ResponseProcessor &green, ResponseProcessor &red);
-    void Run() override;
-};
+#include "actions.hpp"
+#include "ResponseProcessor.hpp"
 
 class PreheatingCommand {
   protected:
     const unsigned int LED_READ_INTERVAL = 50; // [ms]
+    PressOnButton pressOnButton;
+    ReleaseOnButton releaseOnButton;
+    PressOffButton pressOffButton;
+    ReleaseOffButton releaseOffButton;
     PreheatingAnswer Execute(RunnableSequence &sequence);
     PreheatingAnswer Execute(RunnableScheduler &scheduler);
 };
-
-void PressOnButton::Run() {
-  digitalWrite(11, LOW);
-}
-
-void ReleaseOnButton::Run() {
-  digitalWrite(11, HIGH);
-}
-
-void PressOffButton::Run() {}
-
-ReadStatusLed::ReadStatusLed(ResponseProcessor &green, ResponseProcessor &red) : green(green), red(red) {}
-
-void ReadStatusLed::Run() {
-  red.addMeasurement(analogRead(PIN_RED));
-  green.addMeasurement(analogRead(PIN_GREEN));
-}
 
 PreheatingAnswer PreheatingCommand::Execute(RunnableSequence &sequence) {
   RunnableScheduler scheduler;
@@ -57,6 +31,5 @@ PreheatingAnswer PreheatingCommand::Execute(RunnableScheduler &scheduler) {
   scheduler.ProcessQueue();
   // build result
   return PreheatingAnswer(green.getPressedTimes(), red.getPressedTimes());
-  //return *this;
 }
 

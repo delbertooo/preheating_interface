@@ -1,5 +1,8 @@
 #include <vector>
 
+#ifndef __RESPONSEPROCESSOR_HPP
+#define __RESPONSEPROCESSOR_HPP 1
+
 class ResponseProcessor {
   const int THRESHOLD_MIN = 200;
   const int THRESHOLD_MAX = 500;
@@ -16,3 +19,4 @@ class ResponseProcessor {
     std::vector<long> getPressedTimes();
 };
 
+#endif

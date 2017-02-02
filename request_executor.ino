@@ -22,9 +22,13 @@ class SwitchOn : public PreheatingCommand {
 
 void SwitchOn::SomeTest() {
   const int toMinutes = 10;
-  PressOnButton pressOnButton;
 
   PreheatingAnswer a_step3 = Execute(RunnableSequence().Run(pressOnButton).Wait(3000));
+  PreheatingAnswer a_step3_2 = Execute(RunnableSequence().Run(pressOnButton).Wait(750).Run(releaseOnButton).Wait(3000));
+  PreheatingAnswer a_step3_3 = Execute(RunnableSequence()
+      .Run(pressOnButton).Run(pressOffButton).Wait(250).Run(releaseOnButton).Run(releaseOffButton).Wait(350)
+      .Run(pressOnButton).Run(pressOffButton).Wait(250).Run(releaseOnButton).Run(releaseOffButton).Wait(350)
+      .Run(pressOnButton).Run(pressOffButton).Wait(250).Run(releaseOnButton).Run(releaseOffButton).Wait(6000));
 
   RunnableScheduler dry_step3;
   dry_step3.Add(0, pressOnButton);
