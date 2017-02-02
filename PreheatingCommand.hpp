@@ -34,7 +34,7 @@ PreheatingAnswer PreheatingCommand::Execute(RunnableScheduler &scheduler) {
   // process queue
   scheduler.ProcessQueue();
   // build result
-  return PreheatingAnswer(green.PressedTimes(), red.PressedTimes());
+  return PreheatingAnswer(green.EnabledTimes(), red.EnabledTimes());
 }
 
 #endif

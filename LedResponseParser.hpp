@@ -8,69 +8,67 @@
 
 class LedResponseParser {
   private:
-    const int THRESHOLD_MIN = 200; // analogRead value [0 .. 1023]
-    const int THRESHOLD_MAX = 500; // analogRead value [0 .. 1023]
-    const int MIN_PRESSED_TIME = 10; // [ms]
-    bool alreadyPressed = false;
-    std::vector<unsigned long> pressedTimes;
-    unsigned long startedPressingMillis;
-    bool IsPressed(int);
+    const int VALUE_THRESHOLD_MIN = 200; // analogRead value [0 .. 1023]
+    const int VALUE_THRESHOLD_MAX = 500; // analogRead value [0 .. 1023]
+    const int MIN_ENABLED_TIME = 10; // [ms]
+    bool alreadyEnabled = false;
+    std::vector<unsigned long> enabledTimes;
+    unsigned long enabledStartMillis;
+    bool IsEnabled(int);
   public:
     LedResponseParser();
     void AddMeasurement(int);
     void PrintDebugOutput();
-    //std::string toString();
-    std::vector<unsigned long> PressedTimes();
+    //std::string ToString();
+    std::vector<unsigned long> EnabledTimes();
 };
 
-LedResponseParser::LedResponseParser() {
- 
-}
-std::vector<unsigned long> LedResponseParser::PressedTimes() {
-  return pressedTimes;
+LedResponseParser::LedResponseParser() { }
+
+std::vector<unsigned long> LedResponseParser::EnabledTimes() {
+  return enabledTimes;
 }
 
 void LedResponseParser::AddMeasurement(int value) {
-  //Serial.println(value);
-  if (IsPressed(value) && !alreadyPressed) {
+  if (IsEnabled(value) && !alreadyEnabled) {
     //Serial.println("on");
-    alreadyPressed = true;
-    startedPressingMillis = millis();
-  } else if (!IsPressed(value) && alreadyPressed) {
+    alreadyEnabled = true;
+    enabledStartMillis = millis();
+  } else if (!IsEnabled(value) && alreadyEnabled) {
     //Serial.println("off");
-    alreadyPressed = false;
-    unsigned long elapsed = millis() - startedPressingMillis;
-    if (elapsed >= MIN_PRESSED_TIME) {
-      pressedTimes.push_back(elapsed);
+    alreadyEnabled = false;
+    unsigned long elapsed = millis() - enabledStartMillis;
+    if (elapsed >= MIN_ENABLED_TIME) {
+      enabledTimes.push_back(elapsed);
     }
   }
 }
 
-bool LedResponseParser::IsPressed(int value) {
-  return value < THRESHOLD_MAX && value > THRESHOLD_MIN;
+bool LedResponseParser::IsEnabled(int value) {
+  return value < VALUE_THRESHOLD_MAX && value > VALUE_THRESHOLD_MIN;
 }
 
-/*std::string LedResponseParser::toString() {
+/*std::string LedResponseParser::ToString() {
   std::ostringstream stringStream;
-  stringStream << "{ size: " << pressedTimes.size() << ", pressedTimes: [";
-  //for (auto elapsed : pressedTimes) {
-  for (auto it = pressedTimes.begin(); it != pressedTimes.end(); ++it) {
-    if (it != pressedTimes.begin()) { stringStream << ", "; }
+  stringStream << "{ size: " << enabledTimes.size() << ", enabledTimes: [";
+  //for (auto elapsed : enabledTimes) {
+  for (auto it = enabledTimes.begin(); it != enabledTimes.end(); ++it) {
+    if (it != enabledTimes.begin()) { stringStream << ", "; }
     stringStream << *it;
   }
   stringStream << "] }";
   return stringStream.str();
 }
 
-void LedResponseParser::printDebugOutput() {
+void LedResponseParser::PrintDebugOutput() {
   Serial.println(toString().c_str());
 }*/
 
 void LedResponseParser::PrintDebugOutput() {
-  Serial.print("{ size: " + String(pressedTimes.size()) + ", pressedTimes: [");
-  //for (auto elapsed : pressedTimes) {
-  for (auto it = pressedTimes.begin(); it != pressedTimes.end(); ++it) {
-    if (it != pressedTimes.begin()) { Serial.print(", "); }
+  Serial.print("{ size: " + String(enabledTimes.size()) + ", enabledTimes: [");
+  //for (auto elapsed : enabledTimes) {
+  for (auto it = enabledTimes.begin(); it != enabledTimes.end(); ++it) {
+    if (it != enabledTimes.begin()) { Serial.print(", "); }
     Serial.print(*it);
   }
   Serial.println("] }");
