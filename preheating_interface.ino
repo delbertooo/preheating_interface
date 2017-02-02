@@ -17,6 +17,8 @@ void setup() {
 }
 bool pigSolution = false;
 void loop() {
+  SwitchOn so;
+  so.SomeTest();
   Serial.println("reading shit in 3"); delay(1000);
   Serial.println("reading shit in 2"); delay(1000);
   Serial.println("reading shit in 1"); delay(1000);

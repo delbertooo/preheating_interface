@@ -30,7 +30,7 @@ class RunnableScheduler {
 
 class RunnableSequence {
   private:
-    static class : public Runnable { public: void Run() override {} } noop;
+    class : public Runnable { public: inline void Run() override {} } noop;
     unsigned long actualDelay = 0;
     std::vector<QueuedRunnable> queue;
   public:
@@ -40,3 +40,4 @@ class RunnableSequence {
 };
 
 #endif
+
