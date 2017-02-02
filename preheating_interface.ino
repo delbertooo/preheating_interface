@@ -1,7 +1,7 @@
 #include <StandardCplusplus.h>
 #include <vector>
 #include "LedResponseParser.hpp"
-#include "SwitchOnCommand.hpp"
+#include "SomeTest.hpp"
 
 const byte RED_PIN = 2;
 const byte GREEN_PIN = 3;
@@ -17,8 +17,8 @@ void setup() {
 }
 bool pigSolution = false;
 void loop() {
-  SwitchOn so;
-  so.SomeTest();
+  SomeTest st;
+  st.Test();
   Serial.println("reading shit in 3"); delay(1000);
   Serial.println("reading shit in 2"); delay(1000);
   Serial.println("reading shit in 1"); delay(1000);

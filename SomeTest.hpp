@@ -16,12 +16,12 @@ class NoOperation : public Runnable {
     void Run() override { }
 };
 
-class SwitchOn : public PreheatingCommand {
+class SomeTest : public PreheatingCommand {
   public:
-    void SomeTest();
+    void Test();
 };
 
-void SwitchOn::SomeTest() {
+void SomeTest::Test() {
   const int toMinutes = 10;
 
   PreheatingAnswer a_step3 = Execute(RunnableSequence().Run(pressOnButton).Wait(3000));
