@@ -12,7 +12,7 @@ class ResponseProcessor {
     const int THRESHOLD_MAX = 500;
     const int MIN_PRESSED_TIME = 10;
     bool alreadyPressed = false;
-    std::vector<long> pressedTimes;
+    std::vector<unsigned long> pressedTimes;
     unsigned long l;
     bool isPressed(int);
   public:
@@ -20,13 +20,13 @@ class ResponseProcessor {
     void addMeasurement(int);
     void printDebugOutput();
     //std::string toString();
-    std::vector<long> getPressedTimes();
+    std::vector<unsigned long> getPressedTimes();
 };
 
 ResponseProcessor::ResponseProcessor() {
  
 }
-std::vector<long> ResponseProcessor::getPressedTimes() {
+std::vector<unsigned long> ResponseProcessor::getPressedTimes() {
   return pressedTimes;
 }
 
