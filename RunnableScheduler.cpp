@@ -4,8 +4,12 @@
 #include "Runnable.hpp"
 
 std::deque<QueuedRunnable>::iterator RunnableScheduler::FindPositionByOffset(unsigned long offset) {
-  // TODO: NYI
-  return queue.begin();
+  for (std::deque<QueuedRunnable>::iterator queued_runnable = queue.begin(); queued_runnable != queue.end(); queued_runnable++) {
+    if (queued_runnable->offset > offset) {
+      return queued_runnable;
+    }
+  }
+  return queue.end();
 }
 
 unsigned long RunnableScheduler::LastOffset() {
