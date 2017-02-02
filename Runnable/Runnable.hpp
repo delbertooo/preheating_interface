@@ -1,6 +1,9 @@
 #include <deque>
 #include <vector>
 
+#ifndef __HEADER_RUNNABLE_RUNNABLE
+#define __HEADER_RUNNABLE_RUNNABLE 1
+
 class Runnable {
   public:
     virtual void Run() = 0;
@@ -35,3 +38,4 @@ class RunnableSequence {
     RunnableSequence &AddToScheduler(RunnableScheduler &scheduler);
 };
 
+#endif
