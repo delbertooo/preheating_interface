@@ -1,6 +1,4 @@
-#include <Arduino.h>
 #include <StandardCplusplus.h>
-#include <deque>
 #include <vector>
 #include "Runnable/Runnable.hpp"
 

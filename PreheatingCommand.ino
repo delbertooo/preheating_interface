@@ -50,8 +50,8 @@ PreheatingAnswer PreheatingCommand::Execute(RunnableScheduler &scheduler) {
   ResponseProcessor green, red;
   ReadStatusLed readTask(green, red);
   unsigned long lastOffset = scheduler.LastOffset();
-  for (unsigned int offset = 0; offset < lastOffset; offset += LED_READ_INTERVAL) {
-    scheduler.Add((unsigned long) offset, readTask);
+  for (unsigned long offset = 0; offset < lastOffset; offset += LED_READ_INTERVAL) {
+    scheduler.Add(offset, readTask);
   }
   // process queue
   scheduler.ProcessQueue();
