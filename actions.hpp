@@ -31,11 +31,11 @@ void ReleaseOnButton::Run() {
 }
 
 void PressOffButton::Run() {
-  digitalWrite(10, LOW);
+  digitalWrite(12, LOW);
 }
 
 void ReleaseOffButton::Run() {
-  digitalWrite(10, HIGH);
+  digitalWrite(12, HIGH);
 }
 
 ReadStatusLed::ReadStatusLed(LedResponseParser &green, LedResponseParser &red) : green(green), red(red) {}

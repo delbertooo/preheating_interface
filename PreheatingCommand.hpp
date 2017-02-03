@@ -8,7 +8,7 @@
 
 class PreheatingCommand {
   protected:
-    const unsigned int LED_READ_INTERVAL = 50; // [ms]
+    const unsigned int LED_READ_INTERVAL = 60; // [ms]
     PressOnButton pressOnButton;
     ReleaseOnButton releaseOnButton;
     PressOffButton pressOffButton;
@@ -33,6 +33,8 @@ PreheatingAnswer PreheatingCommand::Execute(RunnableScheduler &scheduler) {
   }
   // process queue
   scheduler.ProcessQueue();
+  Serial.println("Red:"); red.PrintDebugOutput();
+  Serial.println("Green:"); green.PrintDebugOutput();
   // build result
   return PreheatingAnswer(green.EnabledTimes(), red.EnabledTimes());
 }

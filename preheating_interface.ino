@@ -2,6 +2,7 @@
 #include <vector>
 #include "LedResponseParser.hpp"
 #include "SomeTest.hpp"
+#include "SwitchOnCommand.hpp"
 
 const byte RED_PIN = 2;
 const byte GREEN_PIN = 3;
@@ -13,19 +14,24 @@ void setup() {
   //pinMode(INTERRUPT_PIN, INPUT_PULLUP);
   pinMode(11, OUTPUT);
   digitalWrite(11, HIGH);
+  pinMode(12, OUTPUT);
+  digitalWrite(12, HIGH);
   //attachInterrupt(digitalPinToInterrupt(INTERRUPT_PIN), pressed, CHANGE);
 }
 bool pigSolution = false;
 void loop() {
-  SomeTest st;
-  st.Test();
-  Serial.println("reading shit in 3"); delay(1000);
-  Serial.println("reading shit in 2"); delay(1000);
-  Serial.println("reading shit in 1"); delay(1000);
-  
-  read_shit();
-  
-  delay(5L * 1000L);
+  if (Serial.available() > 0) {
+    String uart_in = Serial.readStringUntil('\n');
+    if (uart_in == "on") {
+      Serial.println("activate");
+      SwitchOnCommand cmd;
+      Serial.println("return: " + String(cmd.Run()));
+    } else if (uart_in == "off") {
+      Serial.println("deactivate");
+      SwitchOffCommand cmd;
+      Serial.println("return: " + String(cmd.Run()));
+    }
+  }
 }
 
 void read_shit() {
