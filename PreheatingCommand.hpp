@@ -8,7 +8,7 @@
 
 class PreheatingCommand {
   protected:
-    const unsigned int LED_READ_INTERVAL = 60; // [ms]
+    const unsigned int LED_READ_INTERVAL = 5; // [ms]
     PressOnButton pressOnButton;
     ReleaseOnButton releaseOnButton;
     PressOffButton pressOffButton;
@@ -27,10 +27,7 @@ PreheatingAnswer PreheatingCommand::Execute(RunnableScheduler &scheduler) {
   // add read tasks
   LedResponseParser green, red;
   ReadStatusLed readTask(green, red);
-  unsigned long lastOffset = scheduler.LastOffset();
-  for (unsigned long offset = 0; offset < lastOffset; offset += LED_READ_INTERVAL) {
-    scheduler.Add(offset, readTask);
-  }
+  scheduler.AddInterval(LED_READ_INTERVAL, readTask);
   // process queue
   scheduler.ProcessQueue();
   Serial.println("Red:"); red.PrintDebugOutput();

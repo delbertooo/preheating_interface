@@ -1,5 +1,4 @@
 #include <StandardCplusplus.h>
-#include <deque>
 #include <vector>
 
 #ifndef __HEADER_RUNNABLE_RUNNABLE
@@ -19,12 +18,24 @@ struct QueuedRunnable {
 class RunnableScheduler {
   public:
     unsigned long LastOffset();
-    void Add(unsigned long offset, Runnable &request);
+    void AddTimeout(unsigned long offset, Runnable &request);
+    void AddInterval(unsigned long interval, Runnable &request);
     void ProcessQueue();
-  protected:
-    std::deque<QueuedRunnable> queue;
   private:
-    std::deque<QueuedRunnable>::iterator FindPositionByOffset(unsigned long offset);
+    struct QueuedTimeout {
+      unsigned int offset;
+      Runnable* request;
+      QueuedTimeout(unsigned long offset, Runnable& request) : offset(offset), request(&request) {}
+    };
+    struct QueuedInterval {
+      unsigned long nextRunOffset = 0;
+      unsigned long interval;
+      Runnable& request;
+      QueuedInterval(unsigned long interval, Runnable& request) : interval(interval), request(request) {}
+    };
+    std::vector<QueuedTimeout> timeoutQueue;
+    std::vector<QueuedInterval> intervals;
+    std::vector<QueuedTimeout>::iterator FindTimeoutPositionByOffset(unsigned long offset);
 };
 
 

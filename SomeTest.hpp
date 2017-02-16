@@ -32,8 +32,8 @@ void SomeTest::Test() {
       .Run(pressOnButton).Run(pressOffButton).Wait(250).Run(releaseOnButton).Run(releaseOffButton).Wait(6000));
 
   RunnableScheduler dry_step3;
-  dry_step3.Add(0, pressOnButton);
-  dry_step3.Add(3000, NoOperation::Instance());
+  dry_step3.AddTimeout(0, pressOnButton);
+  dry_step3.AddTimeout(3000, NoOperation::Instance());
   
   PreheatingAnswer a_dry_step3 = Execute(dry_step3);
 
