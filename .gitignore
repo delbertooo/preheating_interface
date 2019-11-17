@@ -1,3 +1,4 @@
 .vscode/*
 !.vscode/arduino.json
 build/
+tests/catch.hpp
