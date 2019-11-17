@@ -1,4 +1,3 @@
-#include <ArduinoSTL.h>
 #include <vector>
 #include "Runnable.hpp"
 

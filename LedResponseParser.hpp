@@ -1,5 +1,4 @@
 #include <Arduino.h>
-#include <ArduinoSTL.h>
 #include <vector>
 //#include <sstream>
 

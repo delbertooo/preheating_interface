@@ -1,5 +1,4 @@
 #include <Arduino.h>
-#include <ArduinoSTL.h>
 #include <deque>
 #include <vector>
 #include "Runnable.hpp"
