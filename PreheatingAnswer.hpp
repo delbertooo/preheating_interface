@@ -18,7 +18,7 @@ class PreheatingAnswer {
 PreheatingAnswer::PreheatingAnswer(std::vector<unsigned long> greenFlashes, std::vector<unsigned long> redFlashes) : greenFlashes(greenFlashes), redFlashes(redFlashes) { }
 
 unsigned int PreheatingAnswer::CountProcessorFlashesWithLength(std::vector<unsigned long> &flashes, unsigned long lengthInMilliseconds) {
-  unsigned long thresh = lengthInMilliseconds * .9;
+  unsigned long thresh = lengthInMilliseconds * .1;
   unsigned long minTime = lengthInMilliseconds - thresh;
   unsigned long maxTime = lengthInMilliseconds + thresh;
   unsigned int num = 0;
