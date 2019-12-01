@@ -24,10 +24,14 @@ run() {
     # Arduino IDE's arguments would be like:
     #-g -Os -w -std=gnu++11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -MMD -flto
     g++ -std=gnu++11\
-        -o build/run-tests tests/tests.cpp
+        -o build/run-tests tests/tests.cpp tests/PowerOnCommandTest.cpp
 
-    info "Running tests..."
-    ./build/run-tests
+    if [ "$?" == "0" ]; then
+        info "Running tests..."
+        ./build/run-tests
+    else
+        info "Error building the tests :("
+    fi
 }
 
 do_loop=0

@@ -55,7 +55,7 @@ void SomeTest::Test() {
 
 void mai2n() {
   //Delay r(100);
-  PressOnButton ponb;
-  PressOffButton poffb;
+  //PressOnButton ponb;
+  //PressOffButton poffb;
   //r.InitialDelay();
 }
