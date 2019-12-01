@@ -1,9 +1,14 @@
+#pragma once
+
 #include <Arduino.h>
 #include <deque>
 #include <vector>
 #include "Runnable.hpp"
 #include "PreheatingCommand.hpp"
+#include "actions.hpp"
 
+#ifndef __HS4_HPP
+#define __HS4_HPP 1
 class NoOperation : public Runnable {
   private:
     NoOperation() {}
@@ -22,6 +27,10 @@ class SomeTest : public PreheatingCommand {
 
 void SomeTest::Test() {
   const int toMinutes = 10;
+  PressOnButton pressOnButton;
+  ReleaseOnButton releaseOnButton;
+  PressOffButton pressOffButton;
+  ReleaseOffButton releaseOffButton;
 
   PreheatingAnswer a_step3 = Execute(RunnableSequence().Run(pressOnButton).Wait(3000));
   PreheatingAnswer a_step3_2 = Execute(RunnableSequence().Run(pressOnButton).Wait(750).Run(releaseOnButton).Wait(3000));
@@ -59,3 +68,5 @@ void mai2n() {
   //PressOffButton poffb;
   //r.InitialDelay();
 }
+
+#endif

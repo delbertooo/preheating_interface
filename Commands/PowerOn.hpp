@@ -4,6 +4,8 @@
 #include "IPreheatingCommand.hpp"
 #include "../HardwareExecutor/HardwareExecutor.hpp"
 
+#ifndef __HS2_HPP
+#define __HS2_HPP 1
 class PowerOnCommand : public IPreheatingCommand {
   private:
     IPreheatingCommandExecutor &executor;
@@ -25,3 +27,5 @@ class PowerOnCommand : public IPreheatingCommand {
       return res;
     }
 };
+
+#endif

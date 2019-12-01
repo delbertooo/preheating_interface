@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef __HS1_HPP
+#define __HS1_HPP 1
 class IPreheatingCommandResult {
   public:
     virtual bool IsError() = 0;
@@ -20,3 +22,5 @@ class PreheatingCommandResult : public IPreheatingCommandResult {
     bool IsError() override { return message != NULL; }
     char* ErrorMessage() override { return message; }
 };
+
+#endif

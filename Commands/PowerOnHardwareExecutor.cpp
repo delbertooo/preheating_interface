@@ -1,10 +1,13 @@
 
 #include "PreheatingCommand.hpp"
 #include "HardwareExecutor/HardwareExecutor.hpp"
+#include "../actions.hpp"
 
 class PowerOnCommandHardwareExecutor : public PreheatingCommand, IPreheatingCommandExecutor {
 public:
     PreheatingAnswer Run() {
-        return Execute(RunnableSequence().Run(pressOnButton).Wait(3000));
+        PressOnButton pressOnButton;
+        ReleaseOnButton releaseOnButton;
+        return Execute(RunnableSequence().Run(pressOnButton).Wait(1000).Run(releaseOnButton).Wait(3000));
     }
 };

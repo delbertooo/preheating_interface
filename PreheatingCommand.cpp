@@ -1,15 +1,14 @@
 #include "Runnable.hpp"
 #include "actions.hpp"
 #include "LedResponseParser.hpp"
-#include "PreheatingAnswer.hpp"
 #include "PreheatingCommand.hpp"
 
-PreheatingCommand::PreheatingCommand() : 
+/*PreheatingCommand::PreheatingCommand() : 
   pressOnButton(PressOnButton()),
   pressOffButton(PressOffButton()),
   releaseOnButton(ReleaseOnButton()),
   releaseOffButton(ReleaseOffButton()) { }
-
+*/
 PreheatingAnswer PreheatingCommand::Execute(RunnableSequence &sequence) {
   RunnableScheduler scheduler;
   sequence.AddToScheduler(scheduler);

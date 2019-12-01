@@ -1,6 +1,16 @@
-#include "PreheatingCommand.hpp"
+#pragma once
 
+#include "PreheatingCommand.hpp"
+#include "actions.hpp"
+
+#ifndef __HS5_HPP
+#define __HS5_HPP 1
 class SwitchOnCommand : public PreheatingCommand {
+  private:
+    PressOnButton pressOnButton;
+    ReleaseOnButton releaseOnButton;
+    PressOffButton pressOffButton;
+    ReleaseOffButton releaseOffButton;
   public:
     bool Run();
 };
@@ -14,9 +24,13 @@ bool SwitchOnCommand::Run() {
 }
 
 class SwitchOffCommand : public PreheatingCommand {
+  private:
+    PressOffButton pressOffButton;
+    ReleaseOffButton releaseOffButton;
   public:
     bool Run();
 };
 
 bool SwitchOffCommand::Run() {return Execute(RunnableSequence().Run(pressOffButton).Wait(1000).Run(releaseOffButton).Wait(3000)).CountRedFlashesWithLength(999) == 1;}
 
+#endif
