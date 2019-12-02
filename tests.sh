@@ -16,6 +16,9 @@ prepare() {
         wget -O tests/catch.hpp https://github.com/catchorg/Catch2/releases/download/v2.11.0/catch.hpp
         echo "c3e164751617483c25d42f7f71254d5e5ba39f6b4245c2cfd6cc7ea8d3918cad  tests/catch.hpp" | sha256sum -c
     fi
+    info "Compiling Catch2..."
+    mkdir -p build
+    g++ -std=gnu++11 tests/tests.cpp -c -o build/tests.o
 }
 
 run() {
@@ -24,7 +27,8 @@ run() {
     # Arduino IDE's arguments would be like:
     #-g -Os -w -std=gnu++11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -MMD -flto
     g++ -std=gnu++11\
-        -o build/run-tests tests/tests.cpp tests/PowerOnCommandTest.cpp
+        -o build/run-tests \
+        build/tests.o tests/PowerOnCommandTest.cpp Commands/PreheatingCommandResult.cpp tests/PreheatingAnswerTest.cpp PreheatingAnswer.cpp
 
     if [ "$?" == "0" ]; then
         info "Running tests..."

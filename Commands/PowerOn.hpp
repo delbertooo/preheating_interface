@@ -11,9 +11,9 @@ class PowerOnCommand : public IPreheatingCommand {
     IPreheatingCommandExecutor &executor;
   public:
     PowerOnCommand(IPreheatingCommandExecutor &executor) : executor(executor) { }
-    IPreheatingCommandResult& Execute() override {
+    PreheatingCommandResult Execute() override {
       PreheatingAnswer result = executor.Run();
-      char* error = NULL;
+      const char* error = NULL;
       if (result.CountGreenFlashesWithLength(1000) != 1) {
         if (result.CountRedFlashesWithLength(200) > 4) {
           error = "ERROR_LOW_BATTERY";
@@ -23,8 +23,7 @@ class PowerOnCommand : public IPreheatingCommand {
           error = "ERROR_UNKNOWN";
         }
       }
-      PreheatingCommandResult res(error);
-      return res;
+      return {error};
     }
 };
 
