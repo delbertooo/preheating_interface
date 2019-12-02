@@ -26,9 +26,10 @@ run() {
     mkdir -p build
     # Arduino IDE's arguments would be like:
     #-g -Os -w -std=gnu++11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -MMD -flto
+    readarray -t testfiles < <(cat testindex.txt | grep -v -e '^[[:space:]]*$' | grep -v -e '^[[:space:]]*#')
     g++ -std=gnu++11\
         -o build/run-tests \
-        build/tests.o tests/PowerOnCommandTest.cpp Commands/PreheatingCommandResult.cpp tests/PreheatingAnswerTest.cpp PreheatingAnswer.cpp
+        build/tests.o "${testfiles[@]}"
 
     if [ "$?" == "0" ]; then
         info "Running tests..."

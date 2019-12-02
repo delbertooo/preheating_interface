@@ -1,0 +1,7 @@
+# PowerOnCommand
+tests/PowerOnCommandTest.cpp
+Commands/PreheatingCommandResult.cpp
+
+# PreheatingAnswer
+tests/PreheatingAnswerTest.cpp
+PreheatingAnswer.cpp
