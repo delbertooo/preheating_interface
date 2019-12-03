@@ -7,6 +7,10 @@ unsigned int PreheatingAnswer::CountProcessorFlashesWithLength(std::vector<unsig
   unsigned long thresh = lengthInMilliseconds * .1;
   unsigned long minTime = lengthInMilliseconds - thresh;
   unsigned long maxTime = lengthInMilliseconds + thresh;
+  return CountProcessorFlashesWithLengthBetween(flashes, minTime, maxTime);
+}
+
+unsigned int PreheatingAnswer::CountProcessorFlashesWithLengthBetween(std::vector<unsigned long> &flashes, unsigned long minTime, unsigned long maxTime) {
   unsigned int num = 0;
   for (unsigned long &t : flashes) {
     if (t >= minTime && t <= maxTime) {
@@ -22,4 +26,11 @@ unsigned int PreheatingAnswer::CountRedFlashesWithLength(unsigned long lengthInM
 
 unsigned int PreheatingAnswer::CountGreenFlashesWithLength(unsigned long lengthInMilliseconds) {
   return CountProcessorFlashesWithLength(greenFlashes, lengthInMilliseconds);
+}
+
+unsigned int PreheatingAnswer::CountRedFlashesBetween(unsigned long minTime, unsigned long maxTime) {
+  return CountProcessorFlashesWithLengthBetween(redFlashes, minTime, maxTime);
+}
+unsigned int PreheatingAnswer::CountGreenFlashesBetween(unsigned long minTime, unsigned long maxTime) {
+  return CountProcessorFlashesWithLengthBetween(greenFlashes, minTime, maxTime);
 }
