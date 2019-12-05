@@ -4,8 +4,8 @@
 #include "IPreheatingCommand.hpp"
 #include "../HardwareExecutor/HardwareExecutor.hpp"
 
-#ifndef __HS2_HPP
-#define __HS2_HPP 1
+#ifndef __POWERONCOMMAND_HPP
+#define __POWERONCOMMAND_HPP 1
 class PowerOnCommand : public IPreheatingCommand {
   private:
     IPreheatingCommandExecutor &executor;
@@ -14,10 +14,10 @@ class PowerOnCommand : public IPreheatingCommand {
     PreheatingCommandResult Execute() override {
       PreheatingAnswer result = executor.Run();
       const char* error = NULL;
-      if (result.CountGreenFlashesWithLength(1000) != 1) {
-        if (result.CountRedFlashesWithLength(200) > 4) {
+      if (result.CountGreenFlashesBetween(1000, 2500) != 2) {
+        if (result.CountRedFlashesBetween(50, 400) > 3) {
           error = "ERROR_LOW_BATTERY";
-        } else if (result.CountGreenFlashesWithLength(200) > 4) {
+        } else if (result.CountGreenFlashesBetween(50, 400) > 3) {
           error = "ERROR_OUT_OF_RANGE";
         } else {
           error = "ERROR_UNKNOWN";
