@@ -1,6 +1,7 @@
 #include "catch.hpp"
-#include "../PreheatingAnswer.hpp"
+#include "../HardwareInterface/PreheatingAnswer.hpp"
 
+using namespace HardwareInterface;
 
 TEST_CASE( "PreheatingAnswer can count flashes", "[PreheatingAnswer]" ) {
 

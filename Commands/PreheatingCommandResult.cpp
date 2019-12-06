@@ -1,6 +1,8 @@
 #include "PreheatingCommandResult.hpp"
 #include <cstddef>
 
-PreheatingCommandResult::PreheatingCommandResult(const char* message) : message(message) { }
-bool PreheatingCommandResult::IsError() { return message != NULL; }
-const char* PreheatingCommandResult::ErrorMessage() { return message; }
+Commands::PreheatingCommandResult::PreheatingCommandResult(const char* message) : message(message) { }
+bool Commands::PreheatingCommandResult::IsError() { return message != NULL; }
+const char* Commands::PreheatingCommandResult::ErrorMessage() { return message; }
+
+

@@ -1,8 +1,8 @@
 #include <ArduinoSTL.h>
 #include <vector>
-#include "LedResponseParser.hpp"
-#include "SomeTest.hpp"
-#include "SwitchOnCommand.hpp"
+#include "HardwareInterface/LedResponseParser.hpp"
+#include "Commands/PowerOnCommand.hpp"
+#include "Commands/PowerOnCommandHardwareExecutor.hpp"
 
 const byte RED_PIN = 2;
 const byte GREEN_PIN = 3;
@@ -20,16 +20,20 @@ void setup() {
 }
 bool pigSolution = false;
 void loop() {
+  HardwareInterface::PreheatingRemote remote;
   if (Serial.available() > 0) {
     String uart_in = Serial.readStringUntil('\n');
     if (uart_in == "on") {
       Serial.println("activate");
-      SwitchOnCommand cmd;
-      Serial.println("return: " + String(cmd.Run()));
+      //SwitchOnCommand cmd;
+      Commands::PowerOnCommandHardwareExecutor executor{remote};
+      Commands::PowerOnCommand cmd{executor};
+      Commands::PreheatingCommandResult result = cmd.Execute();
+      Serial.println("was error: " + String(result.IsError()));
     } else if (uart_in == "off") {
       Serial.println("deactivate");
-      SwitchOffCommand cmd;
-      Serial.println("return: " + String(cmd.Run()));
+      //SwitchOffCommand cmd;
+      Serial.println("is not implemented :(");
     }
   }
 }
@@ -37,8 +41,8 @@ void loop() {
 void read_shit() {
   Serial.println("reading shit...");
   unsigned long now, start = millis();
-  LedResponseParser green;
-  LedResponseParser red;
+  HardwareInterface::LedResponseParser green;
+  HardwareInterface::LedResponseParser red;
   //RequestExecutor re(12000, green, red);
   //re.AddRequestSequence(...)
   //re.ProcessQueue();

@@ -1,7 +1,6 @@
-#include "Runnable.hpp"
 #include "actions.hpp"
 #include "LedResponseParser.hpp"
-#include "PreheatingCommand.hpp"
+#include "PreheatingRemote.hpp"
 
 /*PreheatingCommand::PreheatingCommand() : 
   pressOnButton(PressOnButton()),
@@ -9,13 +8,13 @@
   releaseOnButton(ReleaseOnButton()),
   releaseOffButton(ReleaseOffButton()) { }
 */
-PreheatingAnswer PreheatingCommand::Execute(RunnableSequence &sequence) {
+HardwareInterface::PreheatingAnswer HardwareInterface::PreheatingRemote::Execute(RunnableSequence &sequence) {
   RunnableScheduler scheduler;
   sequence.AddToScheduler(scheduler);
   return Execute(scheduler);
 }
 
-PreheatingAnswer PreheatingCommand::Execute(RunnableScheduler &scheduler) {
+HardwareInterface::PreheatingAnswer HardwareInterface::PreheatingRemote::Execute(RunnableScheduler &scheduler) {
   // add read tasks
   LedResponseParser green, red;
   ReadStatusLed readTask(green, red);
@@ -25,5 +24,5 @@ PreheatingAnswer PreheatingCommand::Execute(RunnableScheduler &scheduler) {
   Serial.println("Red:"); red.PrintDebugOutput();
   Serial.println("Green:"); green.PrintDebugOutput();
   // build result
-  return PreheatingAnswer(green.EnabledTimes(), red.EnabledTimes());
+  return {green.EnabledTimes(), red.EnabledTimes()};
 }

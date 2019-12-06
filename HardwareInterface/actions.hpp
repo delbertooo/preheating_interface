@@ -1,8 +1,10 @@
-#include "Runnable.hpp"
+#include "../Runnable.hpp"
 #include "LedResponseParser.hpp"
 
-#ifndef __ACTIONS_HPP
-#define __ACTIONS_HPP 1
+#ifndef __HARDWAREINTERFACE_ACTIONS_HPP
+#define __HARDWAREINTERFACE_ACTIONS_HPP 1
+
+namespace HardwareInterface {
 
 class PressOnButton : public Runnable { public: void Run() override; };
 class ReleaseOnButton : public Runnable { public: void Run() override; };
@@ -19,5 +21,7 @@ class ReadStatusLed : public Runnable {
     ReadStatusLed(LedResponseParser &green, LedResponseParser &red);
     void Run() override;
 };
+
+}
 
 #endif

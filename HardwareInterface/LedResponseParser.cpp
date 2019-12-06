@@ -1,16 +1,15 @@
 #include <Arduino.h>
-#include <vector>
 #include "LedResponseParser.hpp"
 //#include <sstream>
 
 
-LedResponseParser::LedResponseParser() : alreadyEnabled(false) { }
+HardwareInterface::LedResponseParser::LedResponseParser() : alreadyEnabled(false) { }
 
-std::vector<unsigned long> LedResponseParser::EnabledTimes() {
+std::vector<unsigned long> HardwareInterface::LedResponseParser::EnabledTimes() {
   return enabledTimes;
 }
 
-void LedResponseParser::AddMeasurement(int value) {
+void HardwareInterface::LedResponseParser::AddMeasurement(int value) {
   if (IsEnabled(value) && !alreadyEnabled) {
     //Serial.println("on");
     alreadyEnabled = true;
@@ -25,11 +24,11 @@ void LedResponseParser::AddMeasurement(int value) {
   }
 }
 
-bool LedResponseParser::IsEnabled(int value) {
+bool HardwareInterface::LedResponseParser::IsEnabled(int value) {
   return value < VALUE_THRESHOLD_MAX && value > VALUE_THRESHOLD_MIN;
 }
 
-void LedResponseParser::PrintDebugOutput() {
+void HardwareInterface::LedResponseParser::PrintDebugOutput() {
   Serial.print("{ size: " + String(enabledTimes.size()) + ", enabledTimes: [");
   //for (auto elapsed : enabledTimes) {
   for (auto it = enabledTimes.begin(); it != enabledTimes.end(); ++it) {

@@ -1,10 +1,10 @@
-#include <Arduino.h>
 #include <vector>
 //#include <sstream>
 
-#ifndef __LEDRESPONSEPARSER_HPP
-#define __LEDRESPONSEPARSER_HPP 1
+#ifndef __HARDWAREINTERFACE_LEDRESPONSEPARSER_HPP
+#define __HARDWAREINTERFACE_LEDRESPONSEPARSER_HPP 1
 
+namespace HardwareInterface {
 class LedResponseParser {
   private:
     const int VALUE_THRESHOLD_MIN = 200; // analogRead value [0 .. 1023]
@@ -21,5 +21,6 @@ class LedResponseParser {
     //std::string ToString();
     std::vector<unsigned long> EnabledTimes();
 };
+}
 
 #endif

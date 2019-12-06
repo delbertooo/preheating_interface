@@ -1,9 +1,10 @@
 #pragma once
 
 
-#ifndef __HS5_HPP
-#define __HS5_HPP 1
+#ifndef __COMMANDS_PREHEATINGCOMMANDRESULT_HPP
+#define __COMMANDS_PREHEATINGCOMMANDRESULT_HPP 1
 
+namespace Commands {
 
 class PreheatingCommandResult {
   private:
@@ -14,4 +15,5 @@ class PreheatingCommandResult {
     const char* ErrorMessage();
 };
 
+}
 #endif

@@ -1,17 +1,18 @@
 #include "catch.hpp"
 
-#include "../Commands/PowerOn.hpp"
-#include "../PreheatingAnswer.hpp"
+#include "../Commands/PowerOnCommand.hpp"
+#include "../HardwareInterface/PreheatingAnswer.hpp"
 
-class MockHardwareExecutor : public IPreheatingCommandExecutor {
+class MockHardwareExecutor : public HardwareInterface::HardwareExecutor {
 public:
     std::vector<unsigned long> green;
     std::vector<unsigned long> red;
-    PreheatingAnswer Run() {
-        return PreheatingAnswer{green, red};
+    HardwareInterface::PreheatingAnswer Run() {
+        return {green, red};
     }
 };
 
+using namespace Commands;
 
 TEST_CASE( "PowerOnCommand", "[PowerOnCommand]" ) {
     MockHardwareExecutor executor;

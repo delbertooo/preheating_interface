@@ -1,18 +1,20 @@
 #pragma once
 
-#include "../PreheatingCommand.hpp"
-#include "IPreheatingCommand.hpp"
-#include "../HardwareExecutor/HardwareExecutor.hpp"
+#include "PreheatingCommand.hpp"
+#include "../HardwareInterface/HardwareExecutor.hpp"
 
-#ifndef __POWEROFFCOMMAND_HPP
-#define __POWEROFFCOMMAND_HPP 1
-class PowerOffCommand : public IPreheatingCommand {
+#ifndef __COMMANDS_POWEROFFCOMMAND_HPP
+#define __COMMANDS_POWEROFFCOMMAND_HPP 1
+
+namespace Commands {
+
+class PowerOffCommand : public PreheatingCommand {
   private:
-    IPreheatingCommandExecutor &executor;
+    HardwareInterface::HardwareExecutor &executor;
   public:
-    PowerOffCommand(IPreheatingCommandExecutor &executor) : executor(executor) { }
+    PowerOffCommand(HardwareInterface::HardwareExecutor &executor) : executor(executor) { }
     PreheatingCommandResult Execute() override {
-      PreheatingAnswer result = executor.Run();
+      HardwareInterface::PreheatingAnswer result = executor.Run();
       const char* error = NULL;
       if (result.CountRedFlashesBetween(1000, 2500) != 2) {
         if (result.CountRedFlashesBetween(50, 400) > 3) {
@@ -24,5 +26,7 @@ class PowerOffCommand : public IPreheatingCommand {
       return {error};
     }
 };
+
+}
 
 #endif
