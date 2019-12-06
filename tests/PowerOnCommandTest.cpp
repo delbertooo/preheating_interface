@@ -1,7 +1,7 @@
 #include "catch.hpp"
 
-#include "../Commands/PowerOnCommand.hpp"
-#include "../HardwareInterface/PreheatingAnswer.hpp"
+#include "../src/Commands/PowerOnCommand.hpp"
+#include "../src/HardwareInterface/PreheatingAnswer.hpp"
 
 class MockHardwareExecutor : public HardwareInterface::HardwareExecutor {
 public:

@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "../HardwareInterface/PreheatingAnswer.hpp"
+#include "../src/HardwareInterface/PreheatingAnswer.hpp"
 
 using namespace HardwareInterface;
 

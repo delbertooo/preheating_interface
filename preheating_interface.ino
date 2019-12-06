@@ -1,8 +1,8 @@
 #include <ArduinoSTL.h>
 #include <vector>
-#include "HardwareInterface/LedResponseParser.hpp"
-#include "Commands/PowerOnCommand.hpp"
-#include "Commands/PowerOnCommandHardwareExecutor.hpp"
+#include "src/HardwareInterface/LedResponseParser.hpp"
+#include "src/Commands/PowerOnCommand.hpp"
+#include "src/Commands/PowerOnCommandHardwareExecutor.hpp"
 
 const byte RED_PIN = 2;
 const byte GREEN_PIN = 3;

@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include "actions.hpp"
 #include "LedResponseParser.hpp"
 #include "PreheatingRemote.hpp"
