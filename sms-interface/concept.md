@@ -59,9 +59,191 @@ PHC 1337 OFF
 ```json
 {
     "pin": "4711",
+    "cmd": "ON",
+    "someArg": 123,
+    "more": "even more args"
+}
+```
+
+```json
+{
+    "pin": "4711",
     "cmd": {
         "nme": "ON",
         "ags": []
     }
 }
 ```
+
+
+The **customer** asks the **endpoint** to turn the **preheating** on. The endpoint verifies the customers pin with the current **configuration** and, if the pin matches, sends the "on" command to the preheating interface. The endpoint then **answer**s the customer with the result of the command or an error.
+
+```c++
+Customer customer;
+Preheating preheating;
+Configuration config("1234");
+Endpoint endpoint(config, preheating);
+Answer<T> answer = endpoint.turnOnPreheating(pin);
+
+assertNotNull(answer);
+assertFalse(answer.isError());
+
+
+
+
+// Answer#isError() => bool
+// Answer#message() => string
+// Answer#payload() => T
+// Answer implements JsonMessageHandler, StringMessageHandler
+// Answer#jsonMessage() => JsonDocument; Answer#stringMessage() => std::string
+
+
+
+class OnTextHandlerFactory implements HandlerFactory {
+    TextRequestParser parser;
+    Endpoint endpoint;
+
+    boolean supports(std::string rawRequest) {
+        return parser.canRead(rawRequest) && parser.parse(rawRequest).command() == "ON";
+    }
+    
+    Handler forRequest(std::string rawRequest) {
+        auto request = parser.parse(rawRequest);
+        return OnTextHandler(endpoint, request);
+    }
+}
+
+class OnTextHandler {
+    Endpoint endpoint;
+    TextRequest request;
+
+    OnTextHandler(Endpoint endpoint, TextRequest request) {
+    }
+
+    boolean supports() {
+        return request.isParsedSuccessfully() && "ON" == request.command();
+    }
+
+    Response execute() {
+        auto answer = endpoint.turnOnPreheating(request.pin());
+        return Response.success(answer.stringMessage()).empty();
+    }
+}
+
+
+
+
+
+HanlderFactory[] factories = {
+    OnTextHandler(...),
+    OnJsonHandler(...)
+};
+
+std::string rawRequest = "...";
+
+factories.map([rawRequest](factory) { return factory.forRequest(rawRequest); });
+for (auto factory : factories) {
+    factory.forRequest()
+}
+
+
+
+RawRequest req = receive();
+RawResponse res = to_raw_response(req);
+send(res);
+
+
+
+RawResponse to_raw_response(const RawRequest &req) {
+    ParsedRequest *parsedRequest;
+    if (req.ContentType() == "application/json") {
+        //JsonDocument doc = JsonLib::parse_json(req.Content());
+        ParsedJsonRequest jsonRequest = JsonRequestParser.Parse(req.Content());
+
+
+    } else if (req.ContentType() == "text/plain") {
+        ParsedTextRequest textRequest = TextRequestParser.Parse(req.Content());
+
+    } else {
+        return UnknownRequestResponse{};
+    }
+    
+}
+
+
+
+Extract
+
+```
+
+```c
+std::string rawRequest = "something";
+
+auto handler = findHandler(rawRequest);
+if (handler == NULL) {
+    return;
+}
+//auto request = handler.extractRequest();
+auto request = handler.parse(rawRequest);
+auto response = request.execute();
+
+//response.send();
+sendResponse(response);
+
+
+
+
+
+
+
+
+
+handlers
+  .filter(x => x.supports(rawRequest))
+  .map(x => x.setupHandler(rawRequest))
+  .findFirst()
+  .orElse(null);
+
+
+
+
+
+class Handler {
+    Request parse(std::string rawRequest) {
+        
+    }
+}
+
+class Request {
+    Response execute() {
+
+    }
+}
+
+
+
+
+```
+
+
+
+
+```c
+std::string rawRequest = "something";
+
+auto parser = findParser(rawRequest);
+if (parser == NULL) {
+    return;
+}
+auto request = parser.parse(rawRequest);
+
+controller = findController(request);
+
+auto response = controller.execute(request);
+
+//response.send();
+sendResponse(response);
+
+
+```
+
