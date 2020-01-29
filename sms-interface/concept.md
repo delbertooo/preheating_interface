@@ -172,6 +172,86 @@ RawResponse to_raw_response(const RawRequest &req) {
 
 
 
+void doFilter(Request req, Response res, FilterChain chain) {
+    if (req.Pin() == config.Pin()) {
+        chain.doFilter(req, res);
+    } else {
+        //logger.warn("Bad pin");
+    }
+}
+
+
+void doFilter(Request req, Response res, FilterChain chain) {
+    auto mimeType = mimeTypeGuesser.guess(req.Content());
+    if (mimeType != NULL) {
+        //std::shared_ptr<Request> wrappedReq = std::make_shared<ContentTypeRequest>(req, mimeType);
+        ContentTypeRequest wrappedReq{req, mimeType};
+        chain.doFilter(wrappedReq, res);
+    } else {
+        chain.doFilter(req, res);
+    }
+}
+
+
+
+void doFilter(Request req, Response res, FilterChain chain) {
+    if (req.ContentType() != "application/json") {
+        chain.doFilter(req, req);
+        return;
+    }
+
+    JsonDocument doc = jsonParser.Parse(req.Content());
+    JsonRequest wrappedReq{req, doc};
+    chain.doFilter(wrappedReq, res);
+}
+
+
+
+void doFilter(Request req, Response res, FilterChain chain) {
+    if (req.ContentType() != "text/x-preheating") {
+        chain.doFilter(req, req);
+        return;
+    }
+
+    TextBody body = textParser.Parse(req.Content());
+    TextRequest wrappedReq{req, body};
+    chain.doFilter(wrappedReq, res);
+}
+
+
+// command routing filter
+void doFilter(Request req, Response res, FilterChain chain) {
+    ParsedRequest* parsedRequest = dynamic_cast<ParsedRequest*> (&req);
+    if (parsedRequest) {
+        FilterChain requestChain = commandRouting.FilterChainForCommand(parsedRequest->Command());
+        requstChain.doFilter(req, res)
+    }
+    chain.doFilter(req, res);
+
+    if (req.ContentType() != "text/x-preheating") {
+        chain.doFilter(req, req);
+        return;
+    }
+
+    TextBody body = textParser.Parse(req.Content());
+    TextRequest wrappedReq{req, body};
+    chain.doFilter(wrappedReq, res);
+}
+
+
+//HardwareInterface::PreheatingRemote remote;
+//Commands::PowerOnCommandHardwareExecutor executor{remote};
+//Commands::PowerOnCommand cmd{executor};
+void doFilter(Request req, Response res, FilterChain chain) {
+    Commands::PreheatingCommandResult result = cmd.Execute();
+}
+void doFilter(PreheatingInterfaceRequest req,PreheatingInterfaceResponse res, FilterChain chain) {
+    Commands::PreheatingCommandResult result = cmd.Execute();
+    res.
+}
+
+
+
 Extract
 
 ```
