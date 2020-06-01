@@ -45,7 +45,7 @@ PHC 1337 OFF
 
 - Even if it's json, we shoud keep the format compact, because texts are so
   limited in length (more length = higher cost)
-- As the goal of this is better machine readability, we should answer in 
+- As the goal of this is better machine readability, we should answer in
   machine-friendly enum values, too. The translation to a real message can
   be made in each client individually.
 
@@ -106,7 +106,7 @@ class OnTextHandlerFactory implements HandlerFactory {
     boolean supports(std::string rawRequest) {
         return parser.canRead(rawRequest) && parser.parse(rawRequest).command() == "ON";
     }
-    
+
     Handler forRequest(std::string rawRequest) {
         auto request = parser.parse(rawRequest);
         return OnTextHandler(endpoint, request);
@@ -167,7 +167,7 @@ RawResponse to_raw_response(const RawRequest &req) {
     } else {
         return UnknownRequestResponse{};
     }
-    
+
 }
 
 
@@ -252,6 +252,94 @@ void doFilter(PreheatingInterfaceRequest req,PreheatingInterfaceResponse res, Fi
 
 
 
+
+auto cmd = findCommand(request);
+auto res = cmd.Execute();
+
+
+/*
+- raw request
+- convert text to json
+- parse json
+- check pin of json request
+- find and execute action for command; append answer to response
+- convert answer to json
+- convert json to text, if we started text based
+
+*/
+
+const char* toResponse(const char* rawRequest) {
+    JsonDocument doc = jsonParser.parse(rawRequest);
+    if (!pinValidation.checkPin(doc)) {
+        log.debug("Bad pin");
+        return "";
+    }
+    auto action = jsonCommandActionMapping.findAction(req);
+    if (action == NULL) {
+        log.debug("no action found");
+        return "";
+    }
+    JsonDocument resDoc = action->Execute(doc);
+    if (resDoc.isNull()) {
+        log.debug("no response");
+        return "";
+    }
+    String out;
+    serializeJson(resDoc, out);
+    return out;
+}
+
+
+JsonActionMapping actionMapping{};
+HardwareInterface::PreheatingRemote remote;
+Commands::PowerOnCommandHardwareExecutor powerOnCommandHardwareExecutor{remote};
+
+actionMapping.addCommandMapping("on", [powerOnCommandHardwareExecutor] (JsonDocument req) {
+    return new Commands::PowerOnCommand(powerOnCommandHardwareExecutor);
+});
+
+JsonApi jsonApi{log, jsonParser, pinValidation, actionMapping};
+const char* rawResponse = jsonApi.toResponse(rawRequest);
+
+DynamicJsonDocument req(200), res(200);
+deserializeJson(req, rawRequest);
+jsonApi.Handle(req, res);
+serializeJson(res, Serial);
+
+
+void doFilter(Request req, Response res, FilterChain chain) {
+    auto action = jsonCommandActionMapping.findAction(req);
+    if (action == NULL) {
+        auto x = action->Execute(req.JsonDocument())
+        if (x != NULL) {
+            res.SetContent(x);
+            // res has to delete content on destruction
+            //delete x;
+        }
+    }
+    chain.doFilter(req, res);
+}
+
+
+
+
+JsonDocument onAction(JsonDocument doc) {
+    auto ans = command.Execute():
+    if (ans.IsError()) {
+        logError();
+        return NULL;
+    }
+    return ActivatedAnswer{}.toJsonDocument();
+}
+
+
+
+void jsonInterface() {
+    doc.command() == "on"
+
+}
+
+
 Extract
 
 ```
@@ -290,7 +378,7 @@ handlers
 
 class Handler {
     Request parse(std::string rawRequest) {
-        
+
     }
 }
 
