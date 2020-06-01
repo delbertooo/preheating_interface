@@ -2,6 +2,10 @@
 tests/PowerOnResultTest.cpp
 src/Commands/PowerOnResult.cpp
 
+# PowerOnCommand
+tests/PowerOffResultTest.cpp
+src/Commands/PowerOffResult.cpp
+
 # PreheatingAnswer
 tests/PreheatingAnswerTest.cpp
 src/HardwareInterface/PreheatingAnswer.cpp
