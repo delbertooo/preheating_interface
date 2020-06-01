@@ -6,18 +6,14 @@ using namespace HardwareInterface;
 TEST_CASE( "PreheatingAnswer can count flashes", "[PreheatingAnswer]" ) {
 
     SECTION( "works with empty flashes" ) {
-        std::vector<unsigned long> greens;
-        std::vector<unsigned long> reds;
-        PreheatingAnswer a{greens, reds};
+        PreheatingAnswer a{{}, {}};
         REQUIRE( a.CountGreenFlashesWithLength(0) == 0 );
         REQUIRE( a.CountGreenFlashesWithLength(333) == 0 );
         REQUIRE( a.CountGreenFlashesWithLength(1000) == 0 );
     }
     
     SECTION( "counts exact flashes" ) {
-        std::vector<unsigned long> greens{ 100, 200, 100, 100 };
-        std::vector<unsigned long> reds;
-        PreheatingAnswer a{greens, reds};
+        PreheatingAnswer a{{ 100, 200, 100, 100 }, {}};
 
         REQUIRE( a.CountGreenFlashesWithLength(100) == 3 );
         REQUIRE( a.CountGreenFlashesWithLength(200) == 1 );
@@ -25,18 +21,17 @@ TEST_CASE( "PreheatingAnswer can count flashes", "[PreheatingAnswer]" ) {
     }
     
     SECTION( "counts fuzzy flashes up to +/- 10%" ) {
-        std::vector<unsigned long> greens{ 100, 105, 95, 110, 90, 89, 111, 1000, 1100, 900 };
-        std::vector<unsigned long> reds;
-        PreheatingAnswer a{greens, reds};
+        PreheatingAnswer a{{ 100, 105, 95, 110, 90, 89, 111, 1000, 1100, 900 }, {}};
 
         REQUIRE( a.CountGreenFlashesWithLength(100) == 5 );
         REQUIRE( a.CountGreenFlashesWithLength(1000) == 3 );
     }
 
     SECTION( "between two thresholds" ) {
-        std::vector<unsigned long> greens{ 100, 200, 110, 300, 180, 1300, 550 };
-        std::vector<unsigned long> reds{ greens };
-        PreheatingAnswer a{greens, reds};
+        PreheatingAnswer a{
+            { 100, 200, 110, 300, 180, 1300, 550 },
+            { 100, 200, 110, 300, 180, 1300, 550 }
+        };
 
         SECTION( "small margin, nothing matches" ) {
             REQUIRE( a.CountGreenFlashesBetween(0, 0) == 0 );

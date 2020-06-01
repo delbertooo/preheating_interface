@@ -1,8 +1,8 @@
 #include <ArduinoSTL.h>
 #include <vector>
+#include "src/HardwareInterface/PreheatingRemote.hpp"
 #include "src/HardwareInterface/LedResponseParser.hpp"
 #include "src/Commands/PowerOnCommand.hpp"
-#include "src/Commands/PowerOnCommandHardwareExecutor.hpp"
 
 const byte RED_PIN = 2;
 const byte GREEN_PIN = 3;
@@ -26,9 +26,8 @@ void loop() {
     if (uart_in == "on") {
       Serial.println("activate");
       //SwitchOnCommand cmd;
-      Commands::PowerOnCommandHardwareExecutor executor{remote};
-      Commands::PowerOnCommand cmd{executor};
-      Commands::PreheatingCommandResult result = cmd.Execute();
+      Commands::PowerOnCommand cmd{remote};
+      Commands::PowerOnResult result = cmd.PowerOn();
       Serial.println("was error: " + String(result.IsError()));
     } else if (uart_in == "off") {
       Serial.println("deactivate");
