@@ -1,8 +1,17 @@
-#include "Runnable.hpp"
+#include "LibScheduling.hpp"
+
+
+using namespace LibScheduling;
 
 RunnableSequence &RunnableSequence::Run(Runnable &request) {
   queue.push_back({actualDelay, request});
   return *this;
+}
+
+
+template<typename T>
+RunnableSequence &RunnableSequence::Run(const T &request) {
+  Run(request);
 }
 
 RunnableSequence &RunnableSequence::Wait(unsigned long delayInMilliseconds) {
@@ -12,12 +21,12 @@ RunnableSequence &RunnableSequence::Wait(unsigned long delayInMilliseconds) {
 
 RunnableSequence &RunnableSequence::AddToScheduler(RunnableScheduler &scheduler) {
   for (QueuedRunnable &element : queue) {
-    scheduler.AddTimeout(element.offset, *element.request);
+    scheduler.AddTimeout(element.offset, element.request);
   }
   // add noop to the end if required
   unsigned long lastOffset = queue.empty() ? 0 : queue.back().offset;
   if (actualDelay > lastOffset) {
-    scheduler.AddTimeout(actualDelay, noop);
+    scheduler.AddTimeout(actualDelay, &noop);
   }
   return *this;
 }

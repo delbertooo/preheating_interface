@@ -1,71 +1,71 @@
+#include <Arduino.h>
 #include <ArduinoSTL.h>
-#include <vector>
-#include "src/HardwareInterface/PreheatingRemote.hpp"
-#include "src/HardwareInterface/LedResponseParser.hpp"
-#include "src/Commands/PowerOnCommand.hpp"
+//#include <vector>
+//#include "src/HardwareInterface/PreheatingRemote.hpp"
+//#include "src/HardwareInterface/LedResponseParser.hpp"
+//#include "src/Commands/PowerOnCommand.hpp"
+#include <LibPreheatingInterface.hpp>
 
 const byte RED_PIN = 2;
 const byte GREEN_PIN = 3;
 const byte INTERRUPT_PIN = GREEN_PIN;
 
+const uint8_t PIN_ON = 11;
+const uint8_t PIN_OFF = 12;
+const uint8_t PIN_GREEN = 1;
+const uint8_t PIN_RED = 0;
+
+class MyRemote : public LibPreheatingInterface::PreheatingRemote {
+  private:
+    const int VALUE_THRESHOLD_MIN = 200; // analogRead value [0 .. 1023]
+    const int VALUE_THRESHOLD_MAX = 500; // analogRead value [0 .. 1023]
+    bool IsEnabled(int value) {
+      return value < VALUE_THRESHOLD_MAX && value > VALUE_THRESHOLD_MIN;
+    }
+public:
+      void PressOn() override { digitalWrite(PIN_ON, LOW); }
+      void PressOff() override { digitalWrite(PIN_OFF, LOW);}
+      void ReleaseOn() override { digitalWrite(PIN_ON, HIGH); }
+      void ReleaseOff() override { digitalWrite(PIN_OFF, HIGH); }
+      bool IsGreenLedOn() override { return IsEnabled(analogRead(PIN_GREEN)); }
+      bool IsRedLedOn() override { return IsEnabled(analogRead(PIN_RED)); }
+      void Boot() {
+        pinMode(PIN_ON, OUTPUT);
+        digitalWrite(PIN_ON, HIGH);
+        pinMode(PIN_OFF, OUTPUT);
+        digitalWrite(PIN_OFF, HIGH);
+      }
+} myRemote;
+
+class MyPlatform : public LibPreheatingInterface::Platform, public LibScheduling::Platform {
+  public:
+    virtual void Println(const char *text) override { Serial.println(text); }
+    virtual unsigned long Millis() override { return millis(); }
+} myPlatform;
+
+LibPreheatingInterface::CommandHelper commandHelper{myPlatform, myPlatform, myRemote};
+
 void setup() {
   Serial.begin(115200);
   Serial.println("yolo");
   //pinMode(INTERRUPT_PIN, INPUT_PULLUP);
-  pinMode(11, OUTPUT);
-  digitalWrite(11, HIGH);
-  pinMode(12, OUTPUT);
-  digitalWrite(12, HIGH);
+  myRemote.Boot();
   //attachInterrupt(digitalPinToInterrupt(INTERRUPT_PIN), pressed, CHANGE);
 }
-bool pigSolution = false;
+
 void loop() {
-  HardwareInterface::PreheatingRemote remote;
   if (Serial.available() > 0) {
     String uart_in = Serial.readStringUntil('\n');
     if (uart_in == "on") {
       Serial.println("activate");
-      //SwitchOnCommand cmd;
-      Commands::PowerOnCommand cmd{remote};
-      Commands::PowerOnResult result = cmd.PowerOn();
+      LibPreheatingInterface::PowerOnCommand cmd{commandHelper};
+      auto result = cmd.PowerOn();
       Serial.println("was error: " + String(result.IsError()));
     } else if (uart_in == "off") {
       Serial.println("deactivate");
-      //SwitchOffCommand cmd;
-      Serial.println("is not implemented :(");
+      LibPreheatingInterface::PowerOffCommand cmd{commandHelper};
+      auto result = cmd.PowerOff();
+      Serial.println("was error: " + String(result.IsError()));
     }
   }
-}
-
-void read_shit() {
-  Serial.println("reading shit...");
-  unsigned long now, start = millis();
-  HardwareInterface::LedResponseParser green;
-  HardwareInterface::LedResponseParser red;
-  //RequestExecutor re(12000, green, red);
-  //re.AddRequestSequence(...)
-  //re.ProcessQueue();
-  
-  
-  digitalWrite(11, LOW);
-  do {
-    now = millis();
-    if (now - start > 1000) { digitalWrite(11, HIGH); }
-    red.AddMeasurement(analogRead(0));
-    green.AddMeasurement(analogRead(1));
-    //Serial.print(analogRead(0));
-    //Serial.print("\t");
-    //Serial.println(analogRead(1));
-  } while (now - start < 4000);
-  Serial.println("green: ");
-  green.PrintDebugOutput();
-  Serial.println("red: ");
-  red.PrintDebugOutput();
-}
-
-void pressed() {
-  Serial.println("interrupt!");
-  pigSolution = !pigSolution;
-  //Serial.print("green:");
-  //Serial.println(digitalRead(INTERRUPT_PIN) == HIGH ? " irgendein wort" : " -");
 }
