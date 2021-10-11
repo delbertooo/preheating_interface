@@ -1,24 +1,16 @@
 #include <Arduino.h>
 #include <ArduinoSTL.h>
-//#include <vector>
-//#include "src/HardwareInterface/PreheatingRemote.hpp"
-//#include "src/HardwareInterface/LedResponseParser.hpp"
-//#include "src/Commands/PowerOnCommand.hpp"
 #include <LibPreheatingInterface.hpp>
 
-const byte RED_PIN = 2;
-const byte GREEN_PIN = 3;
-const byte INTERRUPT_PIN = GREEN_PIN;
-
-const uint8_t PIN_ON = 11;
-const uint8_t PIN_OFF = 12;
-const uint8_t PIN_GREEN = 1;
-const uint8_t PIN_RED = 0;
 
 class MyRemote : public LibPreheatingInterface::PreheatingRemote {
   private:
     const int VALUE_THRESHOLD_MIN = 200; // analogRead value [0 .. 1023]
     const int VALUE_THRESHOLD_MAX = 500; // analogRead value [0 .. 1023]
+    const uint8_t PIN_ON = 11;
+    const uint8_t PIN_OFF = 12;
+    const uint8_t PIN_GREEN = 1;
+    const uint8_t PIN_RED = 0;
     bool IsEnabled(int value) {
       return value < VALUE_THRESHOLD_MAX && value > VALUE_THRESHOLD_MIN;
     }
@@ -48,9 +40,7 @@ LibPreheatingInterface::CommandHelper commandHelper{myPlatform, myPlatform, myRe
 void setup() {
   Serial.begin(115200);
   Serial.println("yolo");
-  //pinMode(INTERRUPT_PIN, INPUT_PULLUP);
   myRemote.Boot();
-  //attachInterrupt(digitalPinToInterrupt(INTERRUPT_PIN), pressed, CHANGE);
 }
 
 void loop() {
