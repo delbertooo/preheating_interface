@@ -1,15 +1,14 @@
 #include "catch.hpp"
 
-#include "../src/Commands/PowerOffCommand.hpp"
-#include "../src/HardwareInterface/PreheatingAnswer.hpp"
+#include "../libpreheatinginterface/src/LibPreheatingInterface.hpp"
 
 
-using namespace Commands;
+using namespace LibPreheatingInterface;
 
 TEST_CASE( "PowerOffResult", "[PowerOffResult]" ) {
 
     SECTION( "is success when there are two long red flashes" ) {
-        HardwareInterface::PreheatingAnswer answer{
+        PreheatingAnswer answer{
             {},
             {2000, 2000}
         };
@@ -20,7 +19,7 @@ TEST_CASE( "PowerOffResult", "[PowerOffResult]" ) {
     }
 
     SECTION( "is error without any flashes" ) {
-        HardwareInterface::PreheatingAnswer answer{
+        PreheatingAnswer answer{
             {},
             {}
         };
@@ -31,7 +30,7 @@ TEST_CASE( "PowerOffResult", "[PowerOffResult]" ) {
     }
 
     SECTION( "out of range when at least 4 fast red flashes" ) {
-        HardwareInterface::PreheatingAnswer answer{
+        PreheatingAnswer answer{
             {},
             {200, 200, 200, 200}
         };
@@ -43,7 +42,7 @@ TEST_CASE( "PowerOffResult", "[PowerOffResult]" ) {
     }
 
     SECTION( "normal out of range scenario" ) {
-        HardwareInterface::PreheatingAnswer answer{
+        PreheatingAnswer answer{
             {2000},
             {2000, 200, 200, 200, 200}
         };

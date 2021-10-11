@@ -29,6 +29,7 @@ run() {
     readarray -t testfiles < <(cat testindex.txt | grep -v -e '^[[:space:]]*$' | grep -v -e '^[[:space:]]*#')
     g++ -std=gnu++11\
         -o build/run-tests \
+        -Ilibscheduling/src \
         build/tests.o "${testfiles[@]}"
 
     if [ "$?" == "0" ]; then

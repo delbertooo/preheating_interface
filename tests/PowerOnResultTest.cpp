@@ -1,15 +1,14 @@
 #include "catch.hpp"
 
-#include "../src/Commands/PowerOnCommand.hpp"
-#include "../src/HardwareInterface/PreheatingAnswer.hpp"
+#include "../libpreheatinginterface/src/LibPreheatingInterface.hpp"
 
 
-using namespace Commands;
+using namespace LibPreheatingInterface;
 
 TEST_CASE( "PowerOnResult", "[PowerOnResult]" ) {
 
     SECTION( "is success when there are two long green flashes" ) {
-        HardwareInterface::PreheatingAnswer answer{
+        PreheatingAnswer answer{
             {2000, 2000},
             {}
         };
@@ -20,7 +19,7 @@ TEST_CASE( "PowerOnResult", "[PowerOnResult]" ) {
     }
 
     SECTION( "is error without any flashes" ) {
-        HardwareInterface::PreheatingAnswer answer{
+        PreheatingAnswer answer{
             {},
             {}
         };
@@ -31,7 +30,7 @@ TEST_CASE( "PowerOnResult", "[PowerOnResult]" ) {
     }
 
     SECTION( "low battery with at least 4 fast red flashes" ) {
-        HardwareInterface::PreheatingAnswer answer{
+        PreheatingAnswer answer{
             {},
             {200, 200, 200, 200}
         };
@@ -43,7 +42,7 @@ TEST_CASE( "PowerOnResult", "[PowerOnResult]" ) {
     }
 
     SECTION( "out of range when at least 4 fast green flashes" ) {
-        HardwareInterface::PreheatingAnswer answer{
+        PreheatingAnswer answer{
             {200, 200, 200, 200},
             {}
         };
@@ -55,7 +54,7 @@ TEST_CASE( "PowerOnResult", "[PowerOnResult]" ) {
     }
 
     SECTION( "normal out of range scenario" ) {
-        HardwareInterface::PreheatingAnswer answer{
+        PreheatingAnswer answer{
             {2000, 200, 200, 200, 200},
             {2000}
         };
