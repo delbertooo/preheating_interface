@@ -3,15 +3,9 @@
 
 using namespace LibScheduling;
 
-RunnableSequence &RunnableSequence::Run(Runnable &request) {
+RunnableSequence &RunnableSequence::Run(Runnable const &request) {
   queue.push_back({actualDelay, request});
   return *this;
-}
-
-
-template<typename T>
-RunnableSequence &RunnableSequence::Run(const T &request) {
-  Run(request);
 }
 
 RunnableSequence &RunnableSequence::Wait(unsigned long delayInMilliseconds) {

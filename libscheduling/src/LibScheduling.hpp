@@ -19,32 +19,30 @@ class Platform {
 
 struct QueuedRunnable {
   unsigned long offset;
-  Runnable* request;
-  QueuedRunnable(unsigned long offset, Runnable& request) : offset(offset), request(&request) {}
+  const Runnable* request;
+  QueuedRunnable(unsigned long offset, const Runnable& request) : offset(offset), request(&request) {}
 };
 
 class RunnableScheduler {
   public:
     unsigned long LastOffset();
-    void AddTimeout(unsigned long offset, Runnable *request);
-    void AddInterval(unsigned long interval, Runnable *request);
-    void AddTimeout(unsigned long offset, Runnable &request);
-    void AddInterval(unsigned long interval, Runnable &request);
-    template<typename T>
-    void AddInterval2(unsigned long interval, T &request);
+    void AddTimeout(unsigned long offset, Runnable const *request);
+    void AddInterval(unsigned long interval, Runnable const *request);
+    void AddTimeout(unsigned long offset, Runnable const &request);
+    void AddInterval(unsigned long interval, Runnable const &request);
     void ProcessQueue();
     RunnableScheduler(Platform &platform);
   private:
     struct QueuedTimeout {
       unsigned int offset;
-      Runnable* request;
-      QueuedTimeout(unsigned long offset, Runnable *request) : offset(offset), request(request) {}
+      const Runnable* request;
+      QueuedTimeout(unsigned long offset, const Runnable *request) : offset(offset), request(request) {}
     };
     struct QueuedInterval {
       unsigned long nextRunOffset = 0;
       unsigned long interval;
-      Runnable* request;
-      QueuedInterval(unsigned long interval, Runnable *request) : interval(interval), request(request) {}
+      const Runnable* request;
+      QueuedInterval(unsigned long interval, const Runnable *request) : interval(interval), request(request) {}
     };
     std::vector<QueuedTimeout> timeoutQueue;
     std::vector<QueuedInterval> intervals;
@@ -59,9 +57,7 @@ class RunnableSequence {
     unsigned long actualDelay = 0;
     std::vector<QueuedRunnable> queue;
   public:
-    RunnableSequence &Run(Runnable &request);
-    template<typename T>
-    RunnableSequence & Run(const T &request);
+    RunnableSequence &Run(Runnable const &request);
     RunnableSequence &Wait(unsigned long delayInMilliseconds);
     RunnableSequence &AddToScheduler(RunnableScheduler &scheduler);
 };

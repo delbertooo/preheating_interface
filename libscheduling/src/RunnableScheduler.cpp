@@ -19,29 +19,24 @@ unsigned long RunnableScheduler::LastOffset() {
   return timeoutQueue.empty() ? 0 : timeoutQueue.back().offset;
 }
 
-void RunnableScheduler::AddTimeout(unsigned long offset, Runnable *request) {
+void RunnableScheduler::AddTimeout(unsigned long offset, Runnable const *request) {
   timeoutQueue.insert(FindTimeoutPositionByOffset(offset), {offset, request});
 }
 
 
-void RunnableScheduler::AddInterval(unsigned long interval, Runnable *request) {
+void RunnableScheduler::AddInterval(unsigned long interval, Runnable const *request) {
   intervals.push_back({interval, request});
 }
 
 
-void RunnableScheduler::AddTimeout(unsigned long offset, Runnable &request) {
+void RunnableScheduler::AddTimeout(unsigned long offset, Runnable const &request) {
   AddTimeout(offset, &request);
 }
 
-void RunnableScheduler::AddInterval(unsigned long interval, Runnable &request) {
+void RunnableScheduler::AddInterval(unsigned long interval, Runnable const &request) {
   AddInterval(interval, &request);
 }
 
-
-template<typename T>
-void RunnableScheduler::AddInterval2(unsigned long interval, T &request) {
-  //AddInterval(interval, &request);
-}
 
 void RunnableScheduler::ProcessQueue() {
   const unsigned long SLOW_WARNING_THRESH = 5; // [ms]

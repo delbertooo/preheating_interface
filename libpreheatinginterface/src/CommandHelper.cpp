@@ -11,6 +11,21 @@ LibScheduling::RunnableScheduler CommandHelper::Scheduler() {
   return {schedulingPlatform};
 }
 
+
+struct readLeds : public LibScheduling::Runnable
+{
+        LedResponseList &green, &red;
+        Platform &platform;
+        LibPreheatingInterface::PreheatingRemote &remote;
+        readLeds(LibPreheatingInterface::PreheatingRemote &remote, Platform &platform, LedResponseList &green, LedResponseList &red) : remote(remote), platform(platform), green(green), red(red) {}
+        void operator()() const override
+        {
+          unsigned long m = platform.Millis();
+          green.AddValue(m, remote.IsGreenLedOn());
+          red.AddValue(m, remote.IsRedLedOn());
+        }
+};
+
 PreheatingAnswer CommandHelper::Run(LibScheduling::RunnableSequence &sequence) {
   auto scheduler = Scheduler();
 
@@ -18,12 +33,12 @@ PreheatingAnswer CommandHelper::Run(LibScheduling::RunnableSequence &sequence) {
 
   // add read tasks
   LedResponseList green, red;
-  auto read = [this, &green, &red]() {
-      unsigned long m = platform.Millis();
-      green.AddValue(m, remote.IsGreenLedOn());
-      red.AddValue(m, remote.IsRedLedOn());
-  };
-  scheduler.AddInterval2(LED_READ_INTERVAL, read);
+  // scheduler.AddInterval(LED_READ_INTERVAL, [this, &green, &red]() {
+  //     unsigned long m = platform.Millis();
+  //     green.AddValue(m, remote.IsGreenLedOn());
+  //     red.AddValue(m, remote.IsRedLedOn());
+  // });
+  scheduler.AddInterval(LED_READ_INTERVAL, readLeds{remote, platform, green, red});
   // process queue
   scheduler.ProcessQueue();
   //Serial.println("Red:"); red.PrintDebugOutput();
