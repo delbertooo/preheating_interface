@@ -1,0 +1,11 @@
+# PowerOnCommand
+tests/PowerOnResultTest.cpp
+libpreheatinginterface/src/PowerOnResult.cpp
+
+# PowerOnCommand
+tests/PowerOffResultTest.cpp
+libpreheatinginterface/src/PowerOffResult.cpp
+
+# PreheatingAnswer
+tests/PreheatingAnswerTest.cpp
+libpreheatinginterface/src/PreheatingAnswer.cpp

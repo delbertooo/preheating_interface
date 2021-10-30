@@ -45,7 +45,7 @@ PHC 1337 OFF
 
 - Even if it's json, we shoud keep the format compact, because texts are so
   limited in length (more length = higher cost)
-- As the goal of this is better machine readability, we should answer in 
+- As the goal of this is better machine readability, we should answer in
   machine-friendly enum values, too. The translation to a real message can
   be made in each client individually.
 
@@ -53,6 +53,15 @@ PHC 1337 OFF
 {
     "pin": "4711",
     "cmd": "ON"
+}
+```
+
+```json
+{
+    "pin": "4711",
+    "cmd": "ON",
+    "someArg": 123,
+    "more": "even more args"
 }
 ```
 

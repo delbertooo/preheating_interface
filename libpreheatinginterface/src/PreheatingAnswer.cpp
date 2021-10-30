@@ -1,19 +1,7 @@
-#include <vector>
-#include "Runnable.hpp"
+#include "LibPreheatingInterface.hpp"
 
-#ifndef __PREHEATINGANSWER_HPP
-#define __PREHEATINGANSWER_HPP 1
+using namespace LibPreheatingInterface;
 
-class PreheatingAnswer {
-  private:
-    std::vector<unsigned long> greenFlashes;
-    std::vector<unsigned long> redFlashes;
-    unsigned int CountProcessorFlashesWithLength(std::vector<unsigned long> &flashes, unsigned long lengthInMilliseconds);
-  public:
-    PreheatingAnswer(std::vector<unsigned long> greenFlashes, std::vector<unsigned long> redFlashes);
-    unsigned int CountRedFlashesWithLength(unsigned long lengthInMilliseconds);
-    unsigned int CountGreenFlashesWithLength(unsigned long lengthInMilliseconds);
-};
 
 PreheatingAnswer::PreheatingAnswer(std::vector<unsigned long> greenFlashes, std::vector<unsigned long> redFlashes) : greenFlashes(greenFlashes), redFlashes(redFlashes) { }
 
@@ -21,6 +9,10 @@ unsigned int PreheatingAnswer::CountProcessorFlashesWithLength(std::vector<unsig
   unsigned long thresh = lengthInMilliseconds * .1;
   unsigned long minTime = lengthInMilliseconds - thresh;
   unsigned long maxTime = lengthInMilliseconds + thresh;
+  return CountProcessorFlashesWithLengthBetween(flashes, minTime, maxTime);
+}
+
+unsigned int PreheatingAnswer::CountProcessorFlashesWithLengthBetween(std::vector<unsigned long> &flashes, unsigned long minTime, unsigned long maxTime) {
   unsigned int num = 0;
   for (unsigned long &t : flashes) {
     if (t >= minTime && t <= maxTime) {
@@ -38,4 +30,9 @@ unsigned int PreheatingAnswer::CountGreenFlashesWithLength(unsigned long lengthI
   return CountProcessorFlashesWithLength(greenFlashes, lengthInMilliseconds);
 }
 
-#endif
+unsigned int PreheatingAnswer::CountRedFlashesBetween(unsigned long minTime, unsigned long maxTime) {
+  return CountProcessorFlashesWithLengthBetween(redFlashes, minTime, maxTime);
+}
+unsigned int PreheatingAnswer::CountGreenFlashesBetween(unsigned long minTime, unsigned long maxTime) {
+  return CountProcessorFlashesWithLengthBetween(greenFlashes, minTime, maxTime);
+}
