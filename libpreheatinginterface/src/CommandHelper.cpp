@@ -14,9 +14,9 @@ LibScheduling::RunnableScheduler CommandHelper::Scheduler() {
 
 struct readLeds : public LibScheduling::Runnable
 {
-        LedResponseList &green, &red;
-        Platform &platform;
         LibPreheatingInterface::PreheatingRemote &remote;
+        Platform &platform;
+        LedResponseList &green, &red;
         readLeds(LibPreheatingInterface::PreheatingRemote &remote, Platform &platform, LedResponseList &green, LedResponseList &red) : remote(remote), platform(platform), green(green), red(red) {}
         void operator()() const override
         {
