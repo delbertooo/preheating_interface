@@ -43,8 +43,8 @@ PreheatingAnswer CommandHelper::Run(LibScheduling::RunnableSequence &sequence) {
   scheduler.ProcessQueue();
   //Serial.println("Red:"); red.PrintDebugOutput();
   //Serial.println("Green:"); green.PrintDebugOutput();
-  printf("green"); for (auto x : green.EnabledTimes()) { printf(" %lu", x); } printf("\n");
-  printf("red  "); for (auto x : red.EnabledTimes()) { printf(" %lu", x); } printf("\n");
+  printf("\ngreen"); for (auto x : green.EnabledTimes()) { printf("  %lu ms", x); } printf("\n");
+  printf("red  "); for (auto x : red.EnabledTimes()) { printf("  %lu ms", x); } printf("\n");
   // build result
   return {green.EnabledTimes(), red.EnabledTimes()};
 }

@@ -30,6 +30,14 @@ void app_main(void)
     LibPreheatingInterface::PowerOnCommand cmd{commandHelper};
     auto result = cmd.PowerOn();
     printf("result was %s\n", (result.IsError() ? "error" : "success"));
+    vTaskDelay(5000 / portTICK_PERIOD_MS);
+    result = cmd.PowerOn();
+    
+    //LibPreheatingInterface::PowerOffCommand cmd2{commandHelper};
+    //auto result2 = cmd2.PowerOff();
+
+    printf("result was %s\n", (result.IsError() ? "error" : "success"));
+
     printf("Hello world!\n");
 
     /* Print chip information */
@@ -49,7 +57,7 @@ void app_main(void)
     printf("Minimum free heap size: %d bytes\n", esp_get_minimum_free_heap_size());
 
     for (int i = 10; i >= 0; i--) {
-        printf("Restarting in %d seconds...\n", i);
+        //printf("Restarting in %d seconds...\n", i);
         vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
     printf("Restarting now.\n");

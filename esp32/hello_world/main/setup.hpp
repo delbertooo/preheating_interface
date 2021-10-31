@@ -17,7 +17,7 @@
 
 #define CHANNEL_RED ADC2_GPIO27_CHANNEL
 #define CHANNEL_GREEN ADC2_GPIO26_CHANNEL
-#define ATTEN ADC_ATTEN_DB_0
+#define ATTEN ADC_ATTEN_DB_11
 #define WIDTH ADC_WIDTH_BIT_12
 
 int readChannel(adc2_channel_t channel)
@@ -77,13 +77,13 @@ public:
     bool IsGreenLedOn() override
     {
         auto x = readChannel(CHANNEL_GREEN);
-        printf("green: %d\n", x);
+        printf("%4dg ", x);
         return IsEnabled(x);
     }
     bool IsRedLedOn() override
     {
         auto x = readChannel(CHANNEL_RED);
-        printf("red: %d\n", x);
+        printf("%4dr ", x);
         return IsEnabled(x);
     }
     void Boot()
