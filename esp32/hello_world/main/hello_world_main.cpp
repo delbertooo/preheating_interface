@@ -29,6 +29,7 @@ void app_main(void)
     myRemote.Boot();
     LibPreheatingInterface::PowerOnCommand cmd{commandHelper};
     auto result = cmd.PowerOn();
+    printf("result was %s\n", (result.IsError() ? "error" : "success"));
     printf("Hello world!\n");
 
     /* Print chip information */
