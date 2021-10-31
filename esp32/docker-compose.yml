@@ -1,0 +1,9 @@
+version: "3.4"
+
+services:
+  shell:
+    image: espressif/idf:release-v4.4
+    tty: true
+    working_dir: /app
+    volumes:
+      - ..:/app
