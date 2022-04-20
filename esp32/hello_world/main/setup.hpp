@@ -8,8 +8,8 @@
 
 #define HIGH 1
 #define LOW 0
-#define PIN_ON GPIO_NUM_12
-#define PIN_OFF GPIO_NUM_14
+#define PIN_ON GPIO_NUM_25
+#define PIN_OFF GPIO_NUM_33
 #define GPIO_OUTPUT_PIN_SEL ((1ULL << PIN_ON) | (1ULL << PIN_OFF))
 
 #define DEFAULT_VREF 1100 //Use adc2_vref_to_gpio() to obtain a better estimate
@@ -102,6 +102,8 @@ public:
         io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
         //configure GPIO with the given settings
         gpio_config(&io_conf);
+        gpio_set_level(PIN_ON, HIGH);
+        gpio_set_level(PIN_OFF, HIGH);
 
         CheckEfuse();
         adc2_config_channel_atten((adc2_channel_t)CHANNEL_RED, ATTEN);

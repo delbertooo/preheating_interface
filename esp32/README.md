@@ -1,10 +1,28 @@
 
 
 
-```
+```bash
+mkdir hello_world/main/lib
+cd hello_world/main/lib
+ln -s ../../../../libscheduling libscheduling
+ln -s ../../../../libpreheatinginterface libpreheatinginterface
+
+
 docker compose up -d
+# or with custom overrides
+docker compose -f docker-compose.yml -f usbserial.yml up -d
 
 docker compose exec shell /opt/esp/entrypoint.sh bash
+```
+
+
+```bash
+# on my mac
+ser2net -d -l -C '9090:raw:0:/dev/cu.usbserial-0001:115200 8DATABITS NONE 1STOPBIT'
+#socat tcp-listen:9090 pty,link=/dev/cu.usbserial-0001
+# in shell
+socat pty,link=/dev/virtualcom0 tcp:host.docker.internal:9090
+#-p socket://host.docker.internal:9090
 ```
 
 
