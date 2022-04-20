@@ -36,8 +36,9 @@ int readChannel(adc2_channel_t channel)
 class MyRemote : public LibPreheatingInterface::PreheatingRemote
 {
 private:
-    const int VALUE_THRESHOLD_MIN = 800;  // readChannel value [0 .. 4095]
-    const int VALUE_THRESHOLD_MAX = 2000; // readChannel value [0 .. 4095]
+    // normal values are ~1840
+    const int VALUE_THRESHOLD_MIN = 1400;  // readChannel value [0 .. 4095]
+    const int VALUE_THRESHOLD_MAX = 2200; // readChannel value [0 .. 4095]
     bool IsEnabled(int value)
     {
         return value < VALUE_THRESHOLD_MAX && value > VALUE_THRESHOLD_MIN;
