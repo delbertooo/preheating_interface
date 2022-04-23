@@ -1,4 +1,4 @@
-idf_component_register(SRCS "preheating_interface_main.cpp"
+idf_component_register(SRCS "app_main.cpp"
                     INCLUDE_DIRS "")
 
 set(LIB_SCHEDULNG_PATH ${preheating_interface_SOURCE_DIR}/main/lib/libscheduling)
