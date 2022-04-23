@@ -2,8 +2,8 @@
 
 
 ```bash
-mkdir hello_world/main/lib
-cd hello_world/main/lib
+mkdir preheating_interface/main/lib
+cd preheating_interface/main/lib
 ln -s ../../../../libscheduling libscheduling
 ln -s ../../../../libpreheatinginterface libpreheatinginterface
 
@@ -27,7 +27,7 @@ socat pty,link=/dev/virtualcom0 tcp:host.docker.internal:9090
 
 
 
-python -m esptool --chip esp32 -p COM5 -b 460800 --before=default_reset --after=hard_reset write_flash --flash_mode dio --flash_freq 40m --flash_size 2MB 0x1000 bootloader/bootloader.bin 0x10000 hello_world.bin 0x8000 partition_table/partition-table.bin
+python -m esptool --chip esp32 -p COM5 -b 460800 --before=default_reset --after=hard_reset write_flash --flash_mode dio --flash_freq 40m --flash_size 2MB 0x1000 bootloader/bootloader.bin 0x10000 preheating_interface.bin 0x8000 partition_table/partition-table.bin
 
 
 https://stackoverflow.com/questions/8304190/cmake-with-include-and-source-paths-basic-setup

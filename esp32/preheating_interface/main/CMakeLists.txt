@@ -1,7 +1,7 @@
-idf_component_register(SRCS "hello_world_main.cpp"
+idf_component_register(SRCS "preheating_interface_main.cpp"
                     INCLUDE_DIRS "")
 
-set(LIB_SCHEDULNG_PATH ${hello_world_SOURCE_DIR}/main/lib/libscheduling)
+set(LIB_SCHEDULNG_PATH ${preheating_interface_SOURCE_DIR}/main/lib/libscheduling)
 
 add_subdirectory(lib/libpreheatinginterface)
 add_subdirectory(lib/libscheduling)
