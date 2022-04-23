@@ -26,6 +26,17 @@ struct readLeds : public LibScheduling::Runnable
         }
 };
 
+void printList(LedResponseList &list) {
+  printf("[ ");
+  bool first = true;
+  for (auto x : list.EnabledTimes()) {
+    if (first) first = false; else printf(",  ");
+    printf("%lu ms", x);
+
+  }
+  printf(" ]\n");
+}
+
 PreheatingAnswer CommandHelper::Run(LibScheduling::RunnableSequence &sequence) {
   auto scheduler = Scheduler();
 
@@ -43,8 +54,10 @@ PreheatingAnswer CommandHelper::Run(LibScheduling::RunnableSequence &sequence) {
   scheduler.ProcessQueue();
   //Serial.println("Red:"); red.PrintDebugOutput();
   //Serial.println("Green:"); green.PrintDebugOutput();
-  printf("\ngreen"); for (auto x : green.EnabledTimes()) { printf("  %lu ms", x); } printf("\n");
-  printf("red  "); for (auto x : red.EnabledTimes()) { printf("  %lu ms", x); } printf("\n");
+  printf("\nLED response:\ngreen ");
+  printList(green);
+  printf("red   ");
+  printList(red);
   // build result
   return {green.EnabledTimes(), red.EnabledTimes()};
 }
