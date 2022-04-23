@@ -52,8 +52,6 @@ PreheatingAnswer CommandHelper::Run(LibScheduling::RunnableSequence &sequence) {
   scheduler.AddInterval(LED_READ_INTERVAL, readLeds{remote, platform, green, red});
   // process queue
   scheduler.ProcessQueue();
-  //Serial.println("Red:"); red.PrintDebugOutput();
-  //Serial.println("Green:"); green.PrintDebugOutput();
   printf("\nLED response:\ngreen ");
   printList(green);
   printf("red   ");
