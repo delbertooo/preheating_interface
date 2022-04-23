@@ -1,5 +1,5 @@
 #include "LibPreheatingInterface.hpp"
-
+#include <cstdio>
 using namespace LibPreheatingInterface;
 
 
@@ -14,9 +14,9 @@ LibScheduling::RunnableScheduler CommandHelper::Scheduler() {
 
 struct readLeds : public LibScheduling::Runnable
 {
-        LedResponseList &green, &red;
-        Platform &platform;
         LibPreheatingInterface::PreheatingRemote &remote;
+        Platform &platform;
+        LedResponseList &green, &red;
         readLeds(LibPreheatingInterface::PreheatingRemote &remote, Platform &platform, LedResponseList &green, LedResponseList &red) : remote(remote), platform(platform), green(green), red(red) {}
         void operator()() const override
         {
@@ -25,6 +25,17 @@ struct readLeds : public LibScheduling::Runnable
           red.AddValue(m, remote.IsRedLedOn());
         }
 };
+
+void printList(LedResponseList &list) {
+  printf("[ ");
+  bool first = true;
+  for (auto x : list.EnabledTimes()) {
+    if (first) first = false; else printf(",  ");
+    printf("%lu ms", x);
+
+  }
+  printf(" ]\n");
+}
 
 PreheatingAnswer CommandHelper::Run(LibScheduling::RunnableSequence &sequence) {
   auto scheduler = Scheduler();
@@ -41,8 +52,10 @@ PreheatingAnswer CommandHelper::Run(LibScheduling::RunnableSequence &sequence) {
   scheduler.AddInterval(LED_READ_INTERVAL, readLeds{remote, platform, green, red});
   // process queue
   scheduler.ProcessQueue();
-  //Serial.println("Red:"); red.PrintDebugOutput();
-  //Serial.println("Green:"); green.PrintDebugOutput();
+  printf("\nLED response:\ngreen ");
+  printList(green);
+  printf("red   ");
+  printList(red);
   // build result
   return {green.EnabledTimes(), red.EnabledTimes()};
 }

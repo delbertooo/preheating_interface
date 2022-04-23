@@ -1,0 +1,6 @@
+add_library(LibPreheatingInterface AbstractCommand.cpp CommandHelper.cpp LedResponseList.cpp PowerOffCommand.cpp PowerOffResult.cpp PowerOnCommand.cpp PowerOnResult.cpp PreheatingAnswer.cpp)
+if (NOT DEFINED LIB_SCHEDULNG_PATH)
+    MESSAGE(FATAL_ERROR "Missing LIB_SCHEDULNG_PATH")
+endif()
+include_directories(${LIB_SCHEDULNG_PATH}/src)
+target_link_libraries(LibPreheatingInterface LibScheduling)
