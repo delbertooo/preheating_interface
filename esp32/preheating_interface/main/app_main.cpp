@@ -14,12 +14,12 @@ extern "C" {
 }
 
 
-MyRemote myRemote{};
-MyPlatform myPlatform{};
-LibPreheatingInterface::CommandHelper commandHelper{myPlatform, myPlatform, myRemote};
-
 void app_main(void)
 {
+    MyRemote myRemote{};
+    MyPlatform myPlatform{};
+    LibPreheatingInterface::CommandHelper commandHelper{myPlatform, myPlatform, myRemote};
+
     myRemote.Boot();
     LibPreheatingInterface::PowerOnCommand cmd{commandHelper};
     auto result = cmd.PowerOn();
