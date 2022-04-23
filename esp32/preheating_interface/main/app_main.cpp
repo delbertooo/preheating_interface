@@ -1,3 +1,5 @@
+#define PREHEATING_INTERFACE_VERBOSITY 3
+
 #include <stdio.h>
 #include "sdkconfig.h"
 #include "freertos/FreeRTOS.h"

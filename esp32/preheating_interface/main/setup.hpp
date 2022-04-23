@@ -68,25 +68,21 @@ private:
             printf("eFuse Vref: NOT supported\n");
     }
 
+    bool IsLedOn(adc2_channel_t channel) {
+        auto x = readChannel(channel);
+        #if (PREHEATING_INTERFACE_VERBOSITY >= 2)
+        printf("%4dg ", x);
+        #endif
+        return IsEnabled(x);
+    }
+
 public:
     void PressOn() override { gpio_set_level(PIN_ON, LOW); }
     void PressOff() override { gpio_set_level(PIN_OFF, LOW); }
     void ReleaseOn() override { gpio_set_level(PIN_ON, HIGH); }
     void ReleaseOff() override { gpio_set_level(PIN_OFF, HIGH); }
-    //bool IsGreenLedOn() override { return IsEnabled(readChannel(CHANNEL_GREEN)); }
-    //bool IsRedLedOn() override { return IsEnabled(readChannel(CHANNEL_RED)); }
-    bool IsGreenLedOn() override
-    {
-        auto x = readChannel(CHANNEL_GREEN);
-        printf("%4dg ", x);
-        return IsEnabled(x);
-    }
-    bool IsRedLedOn() override
-    {
-        auto x = readChannel(CHANNEL_RED);
-        printf("%4dr ", x);
-        return IsEnabled(x);
-    }
+    bool IsGreenLedOn() override { return IsLedOn(CHANNEL_GREEN); }
+    bool IsRedLedOn() override { return IsLedOn(CHANNEL_RED); }
     void Boot()
     {
         //zero-initialize the config structure.
