@@ -6,6 +6,7 @@
 #include "freertos/task.h"
 
 #include "setup.hpp"
+#include "uart.hpp"
 
 extern "C" {
     void app_main(void);
@@ -19,6 +20,9 @@ void app_main(void)
     LibPreheatingInterface::CommandHelper commandHelper{myPlatform, myPlatform, myRemote};
 
     myRemote.Boot();
+
+    echo_task();
+    /*
 
     LibPreheatingInterface::PowerOnCommand cmdOn{commandHelper};
     auto resultOn = cmdOn.PowerOn();
@@ -34,4 +38,5 @@ void app_main(void)
 
     fflush(stdout);
     //esp_restart();
+    */
 }

@@ -31,10 +31,13 @@ python -m esptool --chip esp32 -p COM5 -b 460800 --before=default_reset --after=
 
 
 https://stackoverflow.com/questions/8304190/cmake-with-include-and-source-paths-basic-setup
+
 https://github.com/espressif/esp-idf/blob/bcbef9a8db54d2deef83402f6e4403ccf298803a/examples/build_system/cmake/import_lib/main/CMakeLists.txt
 
 
 https://github.com/espressif/esp-idf/blob/bcbef9a8db54d2deef83402f6e4403ccf298803a/examples/peripherals/gpio/generic_gpio/main/gpio_example_main.c
 
 https://github.com/espressif/esp-idf/blob/bcbef9a8db54d2deef83402f6e4403ccf298803a/examples/peripherals/adc/single_read/adc/main/adc1_example_main.c
+
+https://github.com/espressif/esp-idf/blob/079b5b1857242d6288478c62dc36a843718882e9/examples/peripherals/uart/uart_echo/main/uart_echo_example_main.c
 
