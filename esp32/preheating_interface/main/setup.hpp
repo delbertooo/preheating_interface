@@ -8,8 +8,8 @@
 
 #define HIGH 1
 #define LOW 0
-#define PIN_ON GPIO_NUM_25
-#define PIN_OFF GPIO_NUM_33
+#define PIN_ON GPIO_NUM_33
+#define PIN_OFF GPIO_NUM_25
 #define GPIO_OUTPUT_PIN_SEL ((1ULL << PIN_ON) | (1ULL << PIN_OFF))
 
 #define DEFAULT_VREF 1100 //Use adc2_vref_to_gpio() to obtain a better estimate
