@@ -74,3 +74,12 @@ PHC 1337 OFF
     }
 }
 ```
+
+# AT Commands
+
+Device shows SMS content as hex string with UCS-2 encoded content. The hex string may be spread over multiple lines.
+
+```python
+msg='00480061006C006C006F000A00450069006E000A000A0054006500730074'
+bytes.fromhex(msg).decode('utf_16_be') # 'Hallo\nEin\n\nTest'
+```
