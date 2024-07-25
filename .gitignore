@@ -4,3 +4,4 @@ build/
 tests/catch.hpp
 esp32/**/sdkconfig
 
+__pycache__
